@@ -8,7 +8,7 @@
       <link href="/2022/09/18/K8S%E7%AC%94%E8%AE%B01/"/>
       <url>/2022/09/18/K8S%E7%AC%94%E8%AE%B01/</url>
       
-        <content type="html"><![CDATA[<h1>Kubernetes</h1><blockquote><p>K8S</p><p>一项基于生产环境级别下容器化编排自动化部署技术</p></blockquote><p>这里的编排指的是：</p><ul><li>按照一定的目的一次排列</li><li>调配、安排</li></ul>]]></content>
+        <content type="html"><![CDATA[<h1>Kubernetes</h1><blockquote><p>K8S</p><p>一项基于生产环境级别下容器化编排自动化部署技术</p><p>这里的编排指的是：</p><ul><li>按照一定的目的一次排列</li><li>调配、安排</li></ul></blockquote><h2 id="环境准备"><a class="header-anchor" href="#环境准备">¶</a>环境准备</h2><p><strong>Master</strong></p><blockquote><p>K8S集群控制节点。管理已安装好的集群，对其调度管理，接收用户集群操作</p></blockquote><p><strong>Node</strong></p><blockquote><p>集群工作基点，在此环境上部署集群服务，运行集群容器</p></blockquote>]]></content>
       
       
       <categories>
