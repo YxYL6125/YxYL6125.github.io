@@ -8,7 +8,7 @@
       <link href="/2022/09/18/K8S%E7%AC%94%E8%AE%B01/"/>
       <url>/2022/09/18/K8S%E7%AC%94%E8%AE%B01/</url>
       
-        <content type="html"><![CDATA[<p>还没开始写—</p>]]></content>
+        <content type="html"><![CDATA[<h1>Kubernetes</h1><blockquote><p>K8S</p><p>一项基于生产环境级别下容器化编排自动化部署技术</p></blockquote><p>这里的编排指的是：</p><ul><li>按照一定的目的一次排列</li><li>调配、安排</li></ul>]]></content>
       
       
       <categories>
