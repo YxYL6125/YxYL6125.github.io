@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>Rust-所有权</title>
+      <link href="/2022/10/03/Rust-%E6%89%80%E6%9C%89%E6%9D%83/"/>
+      <url>/2022/10/03/Rust-%E6%89%80%E6%9C%89%E6%9D%83/</url>
+      
+        <content type="html"><![CDATA[<p>在所有程序执行过程中，与计算机内存的暧昧行为早已被默认。但如何与其保持着敌进我退，敌退我进的距离，——在内存中申请内存来执行程序；在执行完过后，不需要的时候再释放这段内存，成为了重中之重。这也是设计编程语言过程中的一座高山。于是，三种主流的模式应运而生：</p><ul><li><p>GC：垃圾回收机制，在程序运行的同时，无时无刻的想办法找那些不被利用，并且以后也不再使用的内存，会收起来，例如最经典的Java(Jvm)，Go，C#</p></li><li><p>显示操作：回收，申请内存这些操作改成了由程序员自己手动操作，(比起GC的耗性能，我果然还是接收不了自己手动操作对象空间的申请与释放)，C++</p></li><li><blockquote><p><strong>通过所有权来管理内存</strong>，编译器在编译时会根据一系列规则进行检查(这里就直接把原话复制过来吧)</p></blockquote></li></ul><p>而Rust正好就是第三种，对内存的管理机制——<strong>所有权</strong></p><p>这种机制，早在编译的时候就确立好了这段内存由谁来支配，大大的挽回了内存的损失。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Tech -Stuck </category>
+          
+          <category> 学习笔记 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Rust </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>您的设计模式-单例模式</title>
       <link href="/2022/09/19/%E6%82%A8%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/"/>
       <url>/2022/09/19/%E6%82%A8%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/</url>
