@@ -1,0 +1,286 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>网络通讯与TPC/IP | YxYL</title><meta name="keywords" content="TCPIP"><meta name="author" content="YxYL,yxyl6125@gmail.com"><meta name="copyright" content="YxYL"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="网络通信与TCP&#x2F;IP 什么是计算机的网络？ 老套路、官方话：  利用通信线路将地理上分散的、具有独立功能的计算机系统和通信设备按不同的形式连接起来，以功能完善的网络软件及协议实现资源共享和信息传递的系统。  主要的网络：  局域网 城域网 广域网 无线网 …  P话就不多说了，直接进入主题吧 首先是，网络通讯的鼻祖、OSI七层模型：  再到我们现在的TCP&#x2F;IP五层模型：  从图片中可以看出来，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网络通讯与TPC&#x2F;IP">
+<meta property="og:url" content="https://www.yxyl6125.eu.org/2022/10/16/%E7%BD%91%E7%BB%9C%E9%80%9A%E8%AE%AF%E4%B8%8ETPC-IP/index.html">
+<meta property="og:site_name" content="YxYL">
+<meta property="og:description" content="网络通信与TCP&#x2F;IP 什么是计算机的网络？ 老套路、官方话：  利用通信线路将地理上分散的、具有独立功能的计算机系统和通信设备按不同的形式连接起来，以功能完善的网络软件及协议实现资源共享和信息传递的系统。  主要的网络：  局域网 城域网 广域网 无线网 …  P话就不多说了，直接进入主题吧 首先是，网络通讯的鼻祖、OSI七层模型：  再到我们现在的TCP&#x2F;IP五层模型：  从图片中可以看出来，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://api.r10086.com/img-api.php?type=%E9%AC%BC%E7%81%AD%E4%B9%8B%E5%88%83%E6%A8%AA%E5%B1%8F%E7%B3%BB%E5%88%971">
+<meta property="article:published_time" content="2022-10-16T01:30:08.000Z">
+<meta property="article:modified_time" content="2022-10-16T01:30:08.000Z">
+<meta property="article:author" content="YxYL">
+<meta property="article:tag" content="TCP&#x2F;IP">
+<meta property="article:tag" content="网络编程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://api.r10086.com/img-api.php?type=%E9%AC%BC%E7%81%AD%E4%B9%8B%E5%88%83%E6%A8%AA%E5%B1%8F%E7%B3%BB%E5%88%971"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://www.yxyl6125.eu.org/2022/10/16/%E7%BD%91%E7%BB%9C%E9%80%9A%E8%AE%AF%E4%B8%8ETPC-IP/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '网络通讯与TPC/IP',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-10-16 09:30:08'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/favicon.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">7</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">11</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-compass"></i><span> 目录</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/messageboard/"><i class="fa-fw fas fa-comment-dots"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://api.r10086.com/img-api.php?type=鬼灭之刃横屏系列1')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">YxYL</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-compass"></i><span> 目录</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/messageboard/"><i class="fa-fw fas fa-comment-dots"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">网络通讯与TPC/IP</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-10-16T01:30:08.000Z" title="发表于 2022-10-16 09:30:08">2022-10-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-10-16T01:30:08.000Z" title="更新于 2022-10-16 09:30:08">2022-10-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AE%A1%E7%BD%91/">计网</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%87%8D%E4%BF%AE/">重修</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="网络通讯与TPC/IP"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1>网络通信与TCP/IP</h1>
+<p>什么是计算机的网络？<br>
+老套路、官方话：</p>
+<blockquote>
+<p>利用通信线路将地理上分散的、具有独立功能的计算机系统和通信设备按不同的形式连接起来，以功能完善的网络软件及协议实现资源共享和信息传递的系统。</p>
+</blockquote>
+<p><strong>主要的网络</strong>：</p>
+<ol>
+<li>局域网</li>
+<li>城域网</li>
+<li>广域网</li>
+<li>无线网</li>
+<li>…</li>
+</ol>
+<p>P话就不多说了，直接进入主题吧</p>
+<p>首先是，网络通讯的鼻祖、<strong>OSI七层模型</strong>：</p>
+<img src="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20221015165435767.png" alt="image-20221015165435767" align="left" style="zoom: 50%;" />
+<p>再到我们现在的<strong>TCP/IP五层模型</strong>：</p>
+<img src="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20221015165526473.png" alt="image-20221015165526473"  align="left" style="zoom:71%;" />
+<p>从图片中可以看出来，TCPIP只是把OSI的上三层合并为了一层，应用层。</p>
+<p>方便记忆：</p>
+<ul>
+<li>应用层：平时我们访问使用的http(bushi)、https协议；或者远程连接的Mysql；远程连接的SSH…</li>
+<li>传输层：
+<ul>
+<li>TCP协议：面向连接的、可靠的流协议</li>
+<li>UDP协议：面向无连接的通讯协议</li>
+</ul>
+</li>
+<li>网络层：IP地址</li>
+<li>数据链路层：硬件驱动程序，追究到底还是</li>
+<li>物理层：网卡</li>
+</ul>
+<p>有些说法是吧最底层的物理层+数据链路层合成一层，但其实不是…</p>
+<h2 id="浅谈TCP-UDP"><a class="header-anchor" href="#浅谈TCP-UDP">¶</a>浅谈TCP/UDP</h2>
+<p>从上文看到，TCP协议是面向连接的、可靠的流协议；而UDP是面向无连接的通讯协议</p>
+<p>TCP首先是要建立连接的，他会有我们平常所说的3次握手，</p>
+<p>为什么要建立连接呢？</p>
+<blockquote>
+<p>1.更好的保证可靠性: 建立连接的过程其实就是让通信双方验证各自的发送能力和接受能力是否正常<br>
+2.协商一些重要参数 (如: 序号的初始值)</p>
+</blockquote>
+<p>具体怎么建立连接？</p>
+<blockquote>
+<p>栗子：</p>
+<p>A给B打电话，打电话同样要同样给自己以及对方的话筒是否正常工作</p>
+<p>第一次握手：刚开始，A不知道自己和B书籍的听筒的话筒是否正常，所以A说：“喂喂喂？？？”</p>
+<p>第二次握手：B听到过后，说明A的话筒和B的听筒正常，但B还需要进一步的检查自己的话筒是否正常；同时B吧A话筒正常和自己听筒正常的消息传给A；于是B：”干嘛？你爹！”</p>
+<p>第三次握手：A收到了B的消息后，就证明了A听筒正常，B听筒正常</p>
+</blockquote>
+<p>这就类似于网络建立连接的三次握手…</p>
+<p>所以，网络中传输数据整体过程是这样的：</p>
+<blockquote>
+<p>又是一个栗子：在消息发送的过程中</p>
+<p>首先我们吧消息编辑好，点击发送button，此时，这个消息还处于<strong>应用层</strong>。点击button后，进入传输层，被解析成，计算机唯一认识的01二进制，再加上大概20个字节的TCP首部，形成<strong>报文</strong>，或者是所谓的<strong>消息</strong>；</p>
+<p>然后，传进网络层，加上IP包首部——&gt;报文段</p>
+<p>传进数据链路层，加上以太网首部——&gt;数据报</p>
+<p>最后进入物理层，通过网卡等硬件，带上型信号，传进以太网电缆。</p>
+<p>等这个<strong>帧</strong>，被甲方接收到过后，通过以上的顺序的反解析，一步一步脱壳成最初我们所编辑的数据包，展示在甲方的应用层上。这时，甲方手机上显现一个：“我是你爹”<br>
+的时候就</p>
+<p>完成的数据(消息)的传输</p>
+</blockquote>
+<hr>
+<p><strong>而UDP</strong></p>
+<p>他最主要的特点就是、UDP是无连接的，就是发送数据之前不需要建立连接，这也是与TCP协议的本质区别，当然，发送数据结束的时候也没有连接可以释放，一次，就减少了开销和发送数据之前的延迟，</p>
+<p>目前QQ，微信，语音电话、视频……之类的通讯大都基于UDP的通信协议，因为大都人不会因为你那一个像素点，一句话两句话听不清楚就抱怨什么(没有针对一些比较紧急的场景)</p>
+<h2 id="网络通讯中的地址与端口号"><a class="header-anchor" href="#网络通讯中的地址与端口号">¶</a>网络通讯中的地址与端口号</h2>
+<h3 id="地址Address"><a class="header-anchor" href="#地址Address">¶</a>地址Address</h3>
+<ul>
+<li>IP地址和MAC地址</li>
+</ul>
+<img src="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20221015185133497.png" alt="image-20221015185133497" align="left" style="zoom:60%; " />
+<img src="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20221015185221395.png" alt="image-20221015185221395" align="left" style="zoom:50%; " />
+<p>打开<strong>win</strong>的<strong>powerShell</strong>，输入：<code>ipconfig</code>可以看到自己设备信息</p>
+<p>这里的物理地址就是MAC地址。MAC地址是厂商开始创建这个设备的时候就将其写在点的硬件上的。所以每个设备只有一个MAC地址，还是不能修改的(除非说是你通过物理手段，修改BIOS，修改MAC地址)，所以MAC地址实在TCP的数据链路层上用的，也可以理解成数据链路层的地址。</p>
+<p>看到我电脑上无线局局域网Adapter (WALN) 下的MAC地址是：E0-D4-64-31-CA-13，前一半是<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%94%B5%E6%B0%94%E7%94%B5%E5%AD%90%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%AD%A6%E4%BC%9A">IEEE</a>给每个厂商一个，后面一半由厂商自己分配</p>
+<p>IPV4就不用说了，没有IPV4是没法上网的，这个东西要么手动获取，要么DHCP服务器给分配IPV4</p>
+<ul>
+<li>
+<p>MAC地址与IPV4的区别</p>
+<blockquote>
+<ol>
+<li>MAC地址不能随意更换，IPV4可以</li>
+<li>MAC地址48位，IPV4是32位</li>
+<li>MAC地址工作在数据链路层，IPV4工作在网络层</li>
+</ol>
+</blockquote>
+</li>
+</ul>
+<h3 id="端口Port"><a class="header-anchor" href="#端口Port">¶</a>端口Port</h3>
+<p>官方：</p>
+<blockquote>
+<p>用来识别同一台计算机设备设备中不同的应用程序，也被称之为应用程序地址</p>
+</blockquote>
+<ul>
+<li>
+<p>为什么端口号有65535个？</p>
+<blockquote>
+<p>因为TCP和UDP协议里面报文头中吗，有专门的的字段来存这个端口号，这个字段头只有2个字节，2^16 = 65536 ，但是一般端口0只带本设备上所有的端口。</p>
+<p>所以端口号只有65536 - 1 =  65535个</p>
+</blockquote>
+</li>
+<li>
+<p>一台设备上最多只能有65535个TCP连接嘛？</p>
+<blockquote>
+<p>这是可笑的，</p>
+<p>一个栗子：现有10个客户端连接一台机器上的Mysql，Mysql也只是接收到了3306这个端口上发送来的数据，</p>
+<p>所以，一台设备上所能接收到的链接，与端口号数没有必然关系。</p>
+</blockquote>
+</li>
+</ul>
+<p>再者，一个通讯在网络中是由5个元组识别：</p>
+<ol>
+<li>源IP</li>
+<li>目标IP</li>
+<li>TCP协议号</li>
+<li>源端口</li>
+<li>目标端口</li>
+</ol>
+<p><img src="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20221015200329440.png" alt="image-20221015200329440"></p>
+<h3 id="TCP三次握手建立连接"><a class="header-anchor" href="#TCP三次握手建立连接">¶</a>TCP三次握手建立连接</h3>
+<p>图片来自：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1c4411d7jb?p=65&amp;vd_source=61258a05469482a4381c086011c25c18">https://www.bilibili.com/video/BV1c4411d7jb?p=65&amp;vd_source=61258a05469482a4381c086011c25c18</a></p>
+<p>TCP报文的首部格式</p>
+<p><img src="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20221015203150879.png" alt="image-20221015203150879"></p>
+<p>至于三次握手的流程我就懒得用文字来描述了，用图片的方式可能更好记忆一点(可能纯粹就是懒吧…)</p>
+<p><img src="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20221015204050802.png" alt="image-20221015204050802" align="left" style="zoom:70%;" />其中SYN是TCP报文里面某一个bit的站位标志。</p>
+<p>出于这样的连接方式，TCP的三次握手也是会有漏洞，——SYN洪泛攻击</p>
+<p><strong>SYN洪泛攻击</strong>，是通过网络服务所在的端口发送大量伪造源地址的攻击报文，发送到服务端，造成服务端上的<strong>半开连接</strong>，队列被占满，从而组织其他用户进行访问。</p>
+<p><strong>原理</strong></p>
+<blockquote>
+<p>攻击者客户端利用为伪造的IP地址想服务端发出请求(第一次)。而服务端的响应(第二次)的报文将永远发送不到真实的客户端，服务端在等待客户端的第三次握手(其实永远不会有的，毕竟是伪造的)，服务端在这种半开的链接过程中小号了资源，如果有成千上万的这样链接，主机资源将被耗尽，从而发达到攻击的目的，就有点像DDOS攻击，都是发送大量的数据包。</p>
+</blockquote>
+<p><strong>解决方案</strong></p>
+<blockquote>
+<ul>
+<li>无效连接监控释放</li>
+<li>延缓TCB分配方法</li>
+<li>防火墙</li>
+</ul>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://www.yxyl6125.eu.org">YxYL</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://www.yxyl6125.eu.org/2022/10/16/%E7%BD%91%E7%BB%9C%E9%80%9A%E8%AE%AF%E4%B8%8ETPC-IP/">https://www.yxyl6125.eu.org/2022/10/16/%E7%BD%91%E7%BB%9C%E9%80%9A%E8%AE%AF%E4%B8%8ETPC-IP/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://www.yxyl6125.eu.org" target="_blank">YxYL</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/TCP-IP/">TCP/IP</a><a class="post-meta__tags" href="/tags/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a></div><div class="post_share"><div class="social-share" data-image="https://api.r10086.com/img-api.php?type=鬼灭之刃横屏系列1" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2022/10/03/Rust-%E6%89%80%E6%9C%89%E6%9D%83/"><img class="next-cover" src="https://service-rivjlduv-1306777571.sh.apigw.tencentcs.com/release/" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Rust-所有权</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/favicon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">YxYL</div><div class="author-info__description">一场兵荒马乱的痛</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">7</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">11</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/YxYL6125"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is Why We</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">网络通信与TCP&#x2F;IP</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%85%E8%B0%88TCP-UDP"><span class="toc-number">1.1.</span> <span class="toc-text">浅谈TCP&#x2F;UDP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E9%80%9A%E8%AE%AF%E4%B8%AD%E7%9A%84%E5%9C%B0%E5%9D%80%E4%B8%8E%E7%AB%AF%E5%8F%A3%E5%8F%B7"><span class="toc-number">1.2.</span> <span class="toc-text">网络通讯中的地址与端口号</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%B0%E5%9D%80Address"><span class="toc-number">1.2.1.</span> <span class="toc-text">地址Address</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AB%AF%E5%8F%A3Port"><span class="toc-number">1.2.2.</span> <span class="toc-text">端口Port</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%BB%BA%E7%AB%8B%E8%BF%9E%E6%8E%A5"><span class="toc-number">1.2.3.</span> <span class="toc-text">TCP三次握手建立连接</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/10/16/%E7%BD%91%E7%BB%9C%E9%80%9A%E8%AE%AF%E4%B8%8ETPC-IP/" title="网络通讯与TPC/IP"><img src="https://api.r10086.com/img-api.php?type=鬼灭之刃横屏系列1" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="网络通讯与TPC/IP"/></a><div class="content"><a class="title" href="/2022/10/16/%E7%BD%91%E7%BB%9C%E9%80%9A%E8%AE%AF%E4%B8%8ETPC-IP/" title="网络通讯与TPC/IP">网络通讯与TPC/IP</a><time datetime="2022-10-16T01:30:08.000Z" title="发表于 2022-10-16 09:30:08">2022-10-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/10/03/Rust-%E6%89%80%E6%9C%89%E6%9D%83/" title="Rust-所有权"><img src="https://service-rivjlduv-1306777571.sh.apigw.tencentcs.com/release/" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Rust-所有权"/></a><div class="content"><a class="title" href="/2022/10/03/Rust-%E6%89%80%E6%9C%89%E6%9D%83/" title="Rust-所有权">Rust-所有权</a><time datetime="2022-10-03T06:16:29.000Z" title="发表于 2022-10-03 14:16:29">2022-10-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/09/19/%E6%82%A8%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" title="您的设计模式-单例模式"><img src="https://www.dmoe.cc/random.php" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="您的设计模式-单例模式"/></a><div class="content"><a class="title" href="/2022/09/19/%E6%82%A8%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" title="您的设计模式-单例模式">您的设计模式-单例模式</a><time datetime="2022-09-19T02:14:09.000Z" title="发表于 2022-09-19 10:14:09">2022-09-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/09/18/K8S%E7%AC%94%E8%AE%B01/" title="K8S笔记1"><img src="https://cdn.seovx.com/d/?mom=302" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="K8S笔记1"/></a><div class="content"><a class="title" href="/2022/09/18/K8S%E7%AC%94%E8%AE%B01/" title="K8S笔记1">K8S笔记1</a><time datetime="2022-09-18T06:49:51.000Z" title="发表于 2022-09-18 14:49:51">2022-09-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/09/18/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%AE%80%E5%8D%95%E9%83%A8%E7%BD%B2/" title="微服务简单部署"><img src="https://api.r10086.com/img-api.php?type=鬼灭之刃横屏系列1" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="微服务简单部署"/></a><div class="content"><a class="title" href="/2022/09/18/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%AE%80%E5%8D%95%E9%83%A8%E7%BD%B2/" title="微服务简单部署">微服务简单部署</a><time datetime="2022-09-18T05:29:53.000Z" title="发表于 2022-09-18 13:29:53">2022-09-18</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By YxYL</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
