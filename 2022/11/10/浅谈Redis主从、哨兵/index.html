@@ -1,0 +1,201 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>浅谈Redis主从、哨兵 | YxYL</title><meta name="keywords" content="Redis"><meta name="author" content="YxYL,yxyl6125@gmail.com"><meta name="copyright" content="YxYL"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="¶主从 先说说主从吧。单机的Redis，能够承载的QPS就在上万到几万不等。但对于缓存来说，本来就是用于高并发的读写的，毕竟不像Mysql那样。 因此，需要将架构提升到，主从(master-slave)架构：一主多从，主读，从写，达到读写分离的效果。所有的读的请求全部走从节点，也可以很轻松的实现水平扩容，支撑住高并发。 ¶Redis replication 的核心机制  Redis采用异步的方式复">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅谈Redis主从、哨兵">
+<meta property="og:url" content="https://www.yxyl6125.eu.org/2022/11/10/%E6%B5%85%E8%B0%88Redis%E4%B8%BB%E4%BB%8E%E3%80%81%E5%93%A8%E5%85%B5/index.html">
+<meta property="og:site_name" content="YxYL">
+<meta property="og:description" content="¶主从 先说说主从吧。单机的Redis，能够承载的QPS就在上万到几万不等。但对于缓存来说，本来就是用于高并发的读写的，毕竟不像Mysql那样。 因此，需要将架构提升到，主从(master-slave)架构：一主多从，主读，从写，达到读写分离的效果。所有的读的请求全部走从节点，也可以很轻松的实现水平扩容，支撑住高并发。 ¶Redis replication 的核心机制  Redis采用异步的方式复">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.dmoe.cc/random.php">
+<meta property="article:published_time" content="2022-11-10T14:47:25.000Z">
+<meta property="article:modified_time" content="2022-11-10T14:47:25.000Z">
+<meta property="article:author" content="YxYL">
+<meta property="article:tag" content="Redis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.dmoe.cc/random.php"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://www.yxyl6125.eu.org/2022/11/10/%E6%B5%85%E8%B0%88Redis%E4%B8%BB%E4%BB%8E%E3%80%81%E5%93%A8%E5%85%B5/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '浅谈Redis主从、哨兵',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-11-10 22:47:25'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/favicon.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-compass"></i><span> 目录</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/messageboard/"><i class="fa-fw fas fa-comment-dots"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://www.dmoe.cc/random.php')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">YxYL</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-compass"></i><span> 目录</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/messageboard/"><i class="fa-fw fas fa-comment-dots"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">浅谈Redis主从、哨兵</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-11-10T14:47:25.000Z" title="发表于 2022-11-10 22:47:25">2022-11-10</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-11-10T14:47:25.000Z" title="更新于 2022-11-10 22:47:25">2022-11-10</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%85%AB%E8%82%A1/">八股</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BC%93%E5%AD%98/">缓存</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>4分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="浅谈Redis主从、哨兵"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="主从"><a class="header-anchor" href="#主从">¶</a>主从</h2>
+<p>先说说主从吧。单机的Redis，能够承载的QPS就在上万到几万不等。但对于缓存来说，本来就是用于高并发的读写的，毕竟不像Mysql那样。</p>
+<p>因此，需要将架构提升到，主从(master-slave)架构：一主多从，主读，从写，达到读写分离的效果。所有的读的请求全部走从节点，也可以很轻松的实现水平扩容，支撑住高并发。</p>
+<h3 id="Redis-replication-的核心机制"><a class="header-anchor" href="#Redis-replication-的核心机制">¶</a>Redis replication 的核心机制</h3>
+<ul>
+<li>Redis采用异步的方式复制数据到<code>slave</code>节点，(从Redis2.8开始，slave node 会周期性地确认自己和master node上的数据是否保持一致)</li>
+<li>一个master node 可以配置多个slave node</li>
+<li>slave node 也可以连接其他的 slave  node（slave node 之间的通讯）</li>
+<li>slave node 节点在复制数据的时候，不会 block master node</li>
+<li>slave node 节点在复制数据的时候，也不会block 自己的查询操作，它会先用之前的旧数据集来提供服务；<br>
+但是复制完成的时候，需要删除旧数据集，这个时候就会暂停对外服务了；</li>
+</ul>
+<p>有一点挺重要的，如果采用了master—slave架构，<strong>那么建议开启 master node 的持久化</strong>，<strong>并且不建议使用 slave node 做 master node 的数据热备</strong>，因为那样的话，如果我们关闭了master的持久化，可能在master重启的时候数据是空的，那么slave复制过来的数据也是空的，数据丢失。</p>
+<h3 id="Redis-主从复制的原理"><a class="header-anchor" href="#Redis-主从复制的原理">¶</a>Redis 主从复制的原理</h3>
+<p>当启动一个slave node 时，他会发送一个<code>PSYNC</code>命令给master node</p>
+<ol>
+<li>slave连接到master ——&gt; 触发一次 <code>full resynchronization</code>全复制</li>
+<li>master就启动一个后台线程，生成一份<code>RDB</code>快照文件 ——&gt; 发给slave</li>
+<li>然后slave node 收到这个快照文件过后，将他写入磁盘中。完了过后，将这份数据持久到内存中。</li>
+<li>紧接着，master会讲 <strong>内存中 缓存的 写命令</strong> 发送到slave，slave会同步这些数据。</li>
+</ol>
+<p>如果slave node 跟master node 出现了网络故障，断开了连接，会自动重连，重连过后 master node 仅仅会复制给slave部分缺少的数据</p>
+<h3 id="主从复制的断点续传"><a class="header-anchor" href="#主从复制的断点续传">¶</a>主从复制的断点续传</h3>
+<blockquote>
+<p>从Redis2.8开始，Redis就支持所谓的<strong>主从复制的断点续传</strong></p>
+</blockquote>
+<p>什么意思呢，如果主从复制的过程当中，由于网络IO等各种原因，导致复制过程中断，name可以接着上次复制的点，继续复制下去，而不是从头开始复制一份</p>
+<p><strong>原理如下：</strong></p>
+<blockquote>
+<p>master node  会在内从中维护一个<code>backlog</code>，master 和 slave 都会保存一个 <code>replica offset</code>还有一个个<code>master run id</code> ，<code>offset</code>就是保存在<code>backlog</code>中的</p>
+<p><code>backlog</code>中，如果master和slave网络中断了，slave会让master从上次<code>replica offset</code>开始继续复制，如果没有找到对应的<code>offset</code>，那么就会执行一次<code>resynchronization</code></p>
+<p>如果根据<code>host+ip</code>定位master node ，是不靠谱的，土规 master node  重启或者数据出现了变化，那么slave node 应该根据不同的run id区分</p>
+</blockquote>
+<h3 id="过期Key的处理"><a class="header-anchor" href="#过期Key的处理">¶</a>过期Key的处理</h3>
+<p>slave 不会过期key，主从主从，仆人肯定是听从主人的嘛，slave只会等待master过期key。如果master过期了一个key，后者通过LRU淘汰了一个key，那么会模拟一条类似于<code>del</code>的指令发送给slave去删除过期的kwy</p>
+<h3 id="那么Redis如何才能做到高可用呢"><a class="header-anchor" href="#那么Redis如何才能做到高可用呢">¶</a>那么Redis如何才能做到高可用呢</h3>
+<p>如果一个系统在356天，有99.99%的时间内，都是可以对外提服务的，那么就是说这个系统是高可用的</p>
+<p>一个slave挂掉了，是不会影响到系统的可用性，因为还有其他的slave在提供服务</p>
+<p>那么，吐过master node 寄了呢，没办法写数据了，写缓存的时候，全部都是失效了。slave node 就没什么作用了，毕竟没有master 给他们复制数据了，这就是所谓群龙无首，遮掩搞得系统相当于不可用</p>
+<hr>
+<p>这就需要设计Redis的高可用架构，<strong>故障转移</strong>，也可以叫做<strong>主备切换</strong></p>
+<p>存在故障转移过后，master node 寄，系统自动监测，并且将某个slave node 自动切换为 master node ，类似于继承？或者说是选举更合适一点。</p>
+<p>这个过程中，就实现了Redis 的主从架构的高可用。</p>
+<p>要完成这样的架构设计，就需要接下来要说到了哨兵机制了……</p>
+<h2 id="哨兵"><a class="header-anchor" href="#哨兵">¶</a>哨兵</h2>
+<h3 id="什么是哨兵？"><a class="header-anchor" href="#什么是哨兵？">¶</a>什么是哨兵？</h3>
+<blockquote>
+<p>Sentinle，中文名是哨兵</p>
+</blockquote>
+<p>哨兵是Redis集群架构中非常重要的一个组件，主要有以下功能：</p>
+<ul>
+<li>集群监控：负责监控Redis master node 和 slave node 是否正常工作</li>
+<li>消息通知：如果某个node有故障，那么哨兵负责发送消息作为警报通知给Mng</li>
+<li>故障转移：如果master node 寄了，会自动将某个slave node 选举为 新的master</li>
+<li>配置中心：如果股中航转移发生了，通知client客户端新的master的<code>address</code></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://www.yxyl6125.eu.org">YxYL</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://www.yxyl6125.eu.org/2022/11/10/%E6%B5%85%E8%B0%88Redis%E4%B8%BB%E4%BB%8E%E3%80%81%E5%93%A8%E5%85%B5/">https://www.yxyl6125.eu.org/2022/11/10/%E6%B5%85%E8%B0%88Redis%E4%B8%BB%E4%BB%8E%E3%80%81%E5%93%A8%E5%85%B5/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://www.yxyl6125.eu.org" target="_blank">YxYL</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Redis/">Redis</a></div><div class="post_share"><div class="social-share" data-image="https://www.dmoe.cc/random.php" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/11/12/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81Redisson/"><img class="prev-cover" src="https://api.r10086.com/img-api.php?type=动漫综合1" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">分布式锁Redisson</div></div></a></div><div class="next-post pull-right"><a href="/2022/10/16/%E7%BD%91%E7%BB%9C%E9%80%9A%E8%AE%AF%E4%B8%8ETPC-IP/"><img class="next-cover" src="https://service-rivjlduv-1306777571.sh.apigw.tencentcs.com/release/" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">网络通讯与TPC/IP</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/favicon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">YxYL</div><div class="author-info__description">一场兵荒马乱的痛</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/YxYL6125"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is Why We</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E4%BB%8E"><span class="toc-number">1.</span> <span class="toc-text">主从</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis-replication-%E7%9A%84%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6"><span class="toc-number">1.1.</span> <span class="toc-text">Redis replication 的核心机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E7%9A%84%E5%8E%9F%E7%90%86"><span class="toc-number">1.2.</span> <span class="toc-text">Redis 主从复制的原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E7%9A%84%E6%96%AD%E7%82%B9%E7%BB%AD%E4%BC%A0"><span class="toc-number">1.3.</span> <span class="toc-text">主从复制的断点续传</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E6%9C%9FKey%E7%9A%84%E5%A4%84%E7%90%86"><span class="toc-number">1.4.</span> <span class="toc-text">过期Key的处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%82%A3%E4%B9%88Redis%E5%A6%82%E4%BD%95%E6%89%8D%E8%83%BD%E5%81%9A%E5%88%B0%E9%AB%98%E5%8F%AF%E7%94%A8%E5%91%A2"><span class="toc-number">1.5.</span> <span class="toc-text">那么Redis如何才能做到高可用呢</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%93%A8%E5%85%B5"><span class="toc-number">2.</span> <span class="toc-text">哨兵</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%93%A8%E5%85%B5%EF%BC%9F"><span class="toc-number">2.1.</span> <span class="toc-text">什么是哨兵？</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/11/12/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81Redisson/" title="分布式锁Redisson"><img src="https://api.r10086.com/img-api.php?type=动漫综合1" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="分布式锁Redisson"/></a><div class="content"><a class="title" href="/2022/11/12/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81Redisson/" title="分布式锁Redisson">分布式锁Redisson</a><time datetime="2022-11-12T15:04:55.000Z" title="发表于 2022-11-12 23:04:55">2022-11-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/11/10/%E6%B5%85%E8%B0%88Redis%E4%B8%BB%E4%BB%8E%E3%80%81%E5%93%A8%E5%85%B5/" title="浅谈Redis主从、哨兵"><img src="https://www.dmoe.cc/random.php" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="浅谈Redis主从、哨兵"/></a><div class="content"><a class="title" href="/2022/11/10/%E6%B5%85%E8%B0%88Redis%E4%B8%BB%E4%BB%8E%E3%80%81%E5%93%A8%E5%85%B5/" title="浅谈Redis主从、哨兵">浅谈Redis主从、哨兵</a><time datetime="2022-11-10T14:47:25.000Z" title="发表于 2022-11-10 22:47:25">2022-11-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/10/16/%E7%BD%91%E7%BB%9C%E9%80%9A%E8%AE%AF%E4%B8%8ETPC-IP/" title="网络通讯与TPC/IP"><img src="https://service-rivjlduv-1306777571.sh.apigw.tencentcs.com/release/" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="网络通讯与TPC/IP"/></a><div class="content"><a class="title" href="/2022/10/16/%E7%BD%91%E7%BB%9C%E9%80%9A%E8%AE%AF%E4%B8%8ETPC-IP/" title="网络通讯与TPC/IP">网络通讯与TPC/IP</a><time datetime="2022-10-16T01:30:08.000Z" title="发表于 2022-10-16 09:30:08">2022-10-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/10/03/Rust-%E6%89%80%E6%9C%89%E6%9D%83/" title="Rust-所有权"><img src="https://api.r10086.com/img-api.php?type=我的世界系列1" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Rust-所有权"/></a><div class="content"><a class="title" href="/2022/10/03/Rust-%E6%89%80%E6%9C%89%E6%9D%83/" title="Rust-所有权">Rust-所有权</a><time datetime="2022-10-03T06:16:29.000Z" title="发表于 2022-10-03 14:16:29">2022-10-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/09/19/%E6%82%A8%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" title="您的设计模式-单例模式"><img src="https://api.r10086.com/img-api.php?type=动漫综合1" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="您的设计模式-单例模式"/></a><div class="content"><a class="title" href="/2022/09/19/%E6%82%A8%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" title="您的设计模式-单例模式">您的设计模式-单例模式</a><time datetime="2022-09-19T02:14:09.000Z" title="发表于 2022-09-19 10:14:09">2022-09-19</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By YxYL</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
