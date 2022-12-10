@@ -4,11 +4,38 @@
   
     
     <entry>
+      <title>WebFlux——响应式编程</title>
+      <link href="/2022/12/10/WebFlux/"/>
+      <url>/2022/12/10/WebFlux/</url>
+      
+        <content type="html"><![CDATA[<p>响应式编程打破了传统的<strong>同步阻塞式编程模型</strong>，而这样往往对性能的消耗是过大的（相对来说嘛），但是基于<strong>响应式数据流</strong>和<strong>背压机制</strong>实现了<strong>异步非阻塞式</strong>的网络通讯、数据访问和事件驱动架构，能减轻服务器资源之间的竞争关系，从而提高服务的响应能力。</p><p>这也是<strong>WebFlux</strong>——Spring出产的基于响应式编程的一套<strong>应用程序框架模型</strong>，的诞生之际……</p><h2 id="背压"><a class="header-anchor" href="#背压">¶</a>背压</h2><p>首先先讲讲<strong>背压</strong></p><p>我们明确，纯“推”的模式下，数据流会有很多不可控制的因素，所以我们需要实现流量控制，这个时候，背压就出来了</p><p>背压，简单来说就是下游能够向上游反馈流量请求的机制。如果消费者消费数据的速度 &lt; 生产者生产数据的速度时，他就会持续消耗系统的资源，知道这些资源被消耗殆尽。这里指的是生产者消耗资源。这个时候，需要一种机制来使得消费者可根据自身当前的处理能力通知生产者来调整生产数据的速度，这种机制就是背压。</p><p>消费者会根据自身的处理能力来请求数据，而生产者也会以根据消费者的消费速度来生产数据，从而在两者之间达成一种动态的平衡，确保系统的及时响应性。</p><h2 id="应用场景"><a class="header-anchor" href="#应用场景">¶</a>应用场景</h2><p>本质上，响应式编程是一种编程技术，还更是一种架构设计的系统方法。所以可以应用于任何地方，简单的Web应用程序，大型企业的解决方案。当然我们也完全可以基于他来构建流式系统或者大数据系统</p><h3 id="Netflix-Hystrix-中的滑动窗口"><a class="header-anchor" href="#Netflix-Hystrix-中的滑动窗口">¶</a>Netflix Hystrix 中的滑动窗口</h3><p>在Spring Cloud中，Hystrix 是奈飞的一个开源容错库，使用了<code>HystrixCircuitBreaker</code>这个类来实现熔断器。</p><p>这个类是通过一个<code>circuitOpen</code>状态位来控制着整个熔断过程，而这个状态位本身的状态值则取决于系统目前的执行数据和健康指标</p><p>那么如何来实现着滑动窗口呢？系统运行时的每一个数据都被视为一个个的<code>event</code>，滑动窗口中的每一个桶——<code>Bucket</code> 都来自源源不断的事件。在技术实现的选型上，Hystrix 采用的基于响应式编程思想的<strong>RxJava</strong>。</p><p>……</p><p>作为总结，Hystrix巧妙的使用了RxJava的 <code>window</code>、<code>flatMap</code> 等操作符来将单位窗口时间内的事件，以及将一个窗口大小内的<code>Bucket</code>聚集到一起形成滑动窗口，并基于滑动窗口继承指标数据，</p><h2 id="Flux-Mono"><a class="header-anchor" href="#Flux-Mono">¶</a>Flux &amp; Mono</h2><p><img src="https://img-blog.csdnimg.cn/3570da1e74d0443cb298fc0df5f824ec.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3loal85MTE=,size_16,color_FFFFFF,t_70" alt=""></p><blockquote><p>Flux 是一个发出(emit)0-N个元素组成的异步序列的Publisher<T>,可以被onComplete信号或者onError信号所终止。在响应流规范中存在三种给下游消费者调用的方法 onNext, onComplete, 和onError。</p><p>Mono 是一个发出(emit)0-1个元素的Publisher<T>,可以被onComplete信号或者onError信号所终止。<br>这里就不翻译了，整体和Flux差不多，只不过这里只会发出0-1个元素。也就是说不是有就是没有。</p></blockquote><p>Flux和Mono是Java响应式中的重要概念，这其实是规定了两种流式范式，这种范式让数据具有一些新的特性，比如基于发布订阅的事件驱动，异步流、背压等等。另外数据是推送（Push）给消费者的以区别于平时我们的拉（Pull）模式。同时我们可以像Stream Api一样使用类似map、flatmap等操作符（operator）来操作它们。</p><h3 id="创建Flux-Mono"><a class="header-anchor" href="#创建Flux-Mono">¶</a>创建Flux&amp;Mono</h3><blockquote><p>2022-12-10 22:23:21 先run，等明天起来再写(明天桌子和鼠标垫就到了，到时候直接原地起飞🚀)</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 响应式编程 </category>
+          
+          <category> WebFlux </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> TODO-LIST </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>大二寒假TOTO-LIST</title>
       <link href="/2022/12/07/%E5%A4%A7%E4%BA%8C%E5%AF%92%E5%81%87TOTO-LIST/"/>
       <url>/2022/12/07/%E5%A4%A7%E4%BA%8C%E5%AF%92%E5%81%87TOTO-LIST/</url>
       
-        <content type="html"><![CDATA[<h1>大二寒假TOTO-LIST</h1><p>2022-12-7 19:08:45</p><h2 id="技术栈"><a class="header-anchor" href="#技术栈">¶</a>技术栈</h2><ul><li><p>[ ] WebFlux</p><ul><li>[ ] Reactor操作</li><li>[ ] 集成组件<ul><li>[ ] Redis</li><li>[ ] MongoDB</li><li>[ ] R2DBC</li><li>[ ] MQ</li></ul></li></ul></li><li><p>[ ] 并发编程</p><ul><li>[ ] Java并发线程池底层原理</li><li>[ ] JUC并发集合底层原理</li><li>[ ] CASAtomic</li><li>[ ] JMM并发三大特性</li><li>[ ] 锁机制</li></ul></li><li><p>[ ] Mysql-Tomcat</p><ul><li>[ ] Mysql性能优化</li><li>[ ] Tomcat整体机构</li><li>[ ] Tomcat线程模型</li></ul></li><li><p>[ ] Jvm</p><ul><li>[ ] JVM类加载机制</li><li>[ ] JVM对象创建和内存分配机制</li><li>[ ] class字节码文件结构</li><li>[ ] 垃圾回收</li><li>[ ] JVM调优</li><li>[ ] JTM</li><li>[ ] Cloud-Native Java虚拟</li><li>[ ] Hotspot</li></ul></li><li><p>[ ] Redis</p><ul><li>[ ] Cluster集群</li><li>[ ] 核心数据结构</li><li>[ ] 分布式锁</li></ul></li><li><p>[ ] MongoDB(暂定)</p></li><li><p>[ ] Sharding-Sphere</p><ul><li>[ ] 简单实操——不准备研究源码以及于原理</li><li>[ ] Sharding-Proxy （?暂定）</li></ul></li><li><p>[ ] Netty</p><ul><li>[ ] 常见的组件使用</li><li>[ ] 核心线程模型</li><li>[ ] 底层数据交互</li></ul></li></ul><p>我不准备在这个时间段去研究源码，一是因为我本来就是个不爱看书的人，直接喊我去看源码，研究别人怎么实现的大概率会打瞌睡，二是顾虑到怕本来底层都没研究清楚就去看源码的话，到时候说不定会本末倒置……</p><h2 id="课程学习"><a class="header-anchor" href="#课程学习">¶</a>课程学习</h2><p>说来好笑，本就已经不听课了，但奈何nmmd邮专非得下学期来了才考试，非暑假复习不可，不然得挂了，我还是想明年的这个时候还是有至少1000的慰藉吧。</p><ul><li>线性代数</li><li>数据结构</li><li>大学物理</li><li>编程基础</li><li>离散数学</li><li>CET6</li><li>工程伦理</li><li>工程管理与经济决策</li></ul><h2 id="总结"><a class="header-anchor" href="#总结">¶</a>总结</h2><p>等到时候要开学了我再来写……</p>]]></content>
+        <content type="html"><![CDATA[<h1>大二寒假TOTO-LIST</h1><p>2022-12-7 19:08:45</p><h2 id="技术栈"><a class="header-anchor" href="#技术栈">¶</a>技术栈</h2><ul><li><p>[x] WebFlux</p><ul><li>[x] Reactor操作</li><li>[x] 集成组件<ul><li>[ ] Redis</li><li>[x] MongoDB</li><li>[ ] R2DBC</li><li>[ ] MQ</li></ul></li></ul></li><li><p>[ ] 并发编程</p><ul><li>[ ] Java并发线程池底层原理</li><li>[ ] JUC并发集合底层原理</li><li>[ ] CASAtomic</li><li>[ ] JMM并发三大特性</li><li>[ ] 锁机制</li></ul></li><li><p>[ ] Mysql-Tomcat</p><ul><li>[ ] Mysql性能优化</li><li>[ ] Tomcat整体机构</li><li>[ ] Tomcat线程模型</li></ul></li><li><p>[ ] Jvm</p><ul><li>[ ] JVM类加载机制</li><li>[ ] JVM对象创建和内存分配机制</li><li>[ ] class字节码文件结构</li><li>[ ] 垃圾回收</li><li>[ ] JVM调优</li><li>[ ] JTM</li><li>[ ] Cloud-Native Java虚拟</li><li>[ ] Hotspot</li></ul></li><li><p>[ ] Redis</p><ul><li>[ ] Cluster集群</li><li>[ ] 核心数据结构</li><li>[ ] 分布式锁</li></ul></li><li><p>[ ] MongoDB(暂定)</p></li><li><p>[ ] Sharding-Sphere</p><ul><li>[ ] 简单实操——不准备研究源码以及于原理</li><li>[ ] Sharding-Proxy （?暂定）</li></ul></li><li><p>[ ] Netty</p><ul><li>[ ] 常见的组件使用</li><li>[ ] 核心线程模型</li><li>[ ] 底层数据交互</li></ul></li></ul><p>我不准备在这个时间段去研究源码，一是因为我本来就是个不爱看书的人，直接喊我去看源码，研究别人怎么实现的大概率会打瞌睡，二是顾虑到怕本来底层都没研究清楚就去看源码的话，到时候说不定会本末倒置……</p><h2 id="课程学习"><a class="header-anchor" href="#课程学习">¶</a>课程学习</h2><p>说来好笑，本就已经不听课了，但奈何nmmd邮专非得下学期来了才考试，非暑假复习不可，不然得挂了，我还是想明年的这个时候还是有至少1000的慰藉吧。</p><ul><li>线性代数</li><li>数据结构</li><li>大学物理</li><li>编程基础</li><li>离散数学</li><li>CET6</li><li>工程伦理</li><li>工程管理与经济决策</li></ul><h2 id="总结"><a class="header-anchor" href="#总结">¶</a>总结</h2><p>等到时候要开学了我再来写……</p>]]></content>
       
       
       

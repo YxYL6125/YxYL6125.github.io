@@ -1,0 +1,172 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>WebFlux——响应式编程 | YxYL</title><meta name="keywords" content="响应式编程,WebFlux"><meta name="author" content="YxYL,yxyl6125@gmail.com"><meta name="copyright" content="YxYL"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="响应式编程打破了传统的同步阻塞式的编程模型，基于响应式数据流和背压机制实现了异步非阻塞式的形式——响应式编程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WebFlux——响应式编程">
+<meta property="og:url" content="https://www.yxyl6125.eu.org/2022/12/10/WebFlux/index.html">
+<meta property="og:site_name" content="YxYL">
+<meta property="og:description" content="响应式编程打破了传统的同步阻塞式的编程模型，基于响应式数据流和背压机制实现了异步非阻塞式的形式——响应式编程">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://miro.medium.com/max/750/1*3pC1B4nF3kWCm8CYq8MqtQ.jpeg">
+<meta property="article:published_time" content="2022-12-10T13:41:59.000Z">
+<meta property="article:modified_time" content="2022-12-10T13:41:59.000Z">
+<meta property="article:author" content="YxYL">
+<meta property="article:tag" content="TODO-LIST">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://miro.medium.com/max/750/1*3pC1B4nF3kWCm8CYq8MqtQ.jpeg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://www.yxyl6125.eu.org/2022/12/10/WebFlux/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'WebFlux——响应式编程',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-12-10 21:41:59'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/favicon.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">12</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">15</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">11</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-compass"></i><span> 目录</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/messageboard/"><i class="fa-fw fas fa-comment-dots"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://miro.medium.com/max/750/1*3pC1B4nF3kWCm8CYq8MqtQ.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">YxYL</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-compass"></i><span> 目录</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/messageboard/"><i class="fa-fw fas fa-comment-dots"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">WebFlux——响应式编程</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-12-10T13:41:59.000Z" title="发表于 2022-12-10 21:41:59">2022-12-10</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-12-10T13:41:59.000Z" title="更新于 2022-12-10 21:41:59">2022-12-10</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%93%8D%E5%BA%94%E5%BC%8F%E7%BC%96%E7%A8%8B/">响应式编程</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%93%8D%E5%BA%94%E5%BC%8F%E7%BC%96%E7%A8%8B/WebFlux/">WebFlux</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">991</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>3分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="WebFlux——响应式编程"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>响应式编程打破了传统的<strong>同步阻塞式编程模型</strong>，而这样往往对性能的消耗是过大的（相对来说嘛），但是基于<strong>响应式数据流</strong>和<strong>背压机制</strong>实现了<strong>异步非阻塞式</strong>的网络通讯、数据访问和事件驱动架构，能减轻服务器资源之间的竞争关系，从而提高服务的响应能力。</p>
+<p>这也是<strong>WebFlux</strong>——Spring出产的基于响应式编程的一套<strong>应用程序框架模型</strong>，的诞生之际……</p>
+<h2 id="背压"><a class="header-anchor" href="#背压">¶</a>背压</h2>
+<p>首先先讲讲<strong>背压</strong></p>
+<p>我们明确，纯“推”的模式下，数据流会有很多不可控制的因素，所以我们需要实现流量控制，这个时候，背压就出来了</p>
+<p>背压，简单来说就是下游能够向上游反馈流量请求的机制。如果消费者消费数据的速度 &lt; 生产者生产数据的速度时，他就会持续消耗系统的资源，知道这些资源被消耗殆尽。这里指的是生产者消耗资源。这个时候，需要一种机制来使得消费者可根据自身当前的处理能力通知生产者来调整生产数据的速度，这种机制就是背压。</p>
+<p>消费者会根据自身的处理能力来请求数据，而生产者也会以根据消费者的消费速度来生产数据，从而在两者之间达成一种动态的平衡，确保系统的及时响应性。</p>
+<h2 id="应用场景"><a class="header-anchor" href="#应用场景">¶</a>应用场景</h2>
+<p>本质上，响应式编程是一种编程技术，还更是一种架构设计的系统方法。所以可以应用于任何地方，简单的Web应用程序，大型企业的解决方案。当然我们也完全可以基于他来构建流式系统或者大数据系统</p>
+<h3 id="Netflix-Hystrix-中的滑动窗口"><a class="header-anchor" href="#Netflix-Hystrix-中的滑动窗口">¶</a>Netflix Hystrix 中的滑动窗口</h3>
+<p>在Spring Cloud中，Hystrix 是奈飞的一个开源容错库，使用了<code>HystrixCircuitBreaker</code>这个类来实现熔断器。</p>
+<p>这个类是通过一个<code>circuitOpen</code>状态位来控制着整个熔断过程，而这个状态位本身的状态值则取决于系统目前的执行数据和健康指标</p>
+<p>那么如何来实现着滑动窗口呢？系统运行时的每一个数据都被视为一个个的<code>event</code>，滑动窗口中的每一个桶——<code>Bucket</code> 都来自源源不断的事件。在技术实现的选型上，Hystrix 采用的基于响应式编程思想的<strong>RxJava</strong>。</p>
+<p>……</p>
+<p>作为总结，Hystrix巧妙的使用了RxJava的 <code>window</code>、<code>flatMap</code> 等操作符来将单位窗口时间内的事件，以及将一个窗口大小内的<code>Bucket</code>聚集到一起形成滑动窗口，并基于滑动窗口继承指标数据，</p>
+<h2 id="Flux-Mono"><a class="header-anchor" href="#Flux-Mono">¶</a>Flux &amp; Mono</h2>
+<p><img src="https://img-blog.csdnimg.cn/3570da1e74d0443cb298fc0df5f824ec.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3loal85MTE=,size_16,color_FFFFFF,t_70" alt=""></p>
+<blockquote>
+<p>Flux 是一个发出(emit)0-N个元素组成的异步序列的Publisher<T>,可以被onComplete信号或者onError信号所终止。在响应流规范中存在三种给下游消费者调用的方法 onNext, onComplete, 和onError。</p>
+<p>Mono 是一个发出(emit)0-1个元素的Publisher<T>,可以被onComplete信号或者onError信号所终止。<br>
+这里就不翻译了，整体和Flux差不多，只不过这里只会发出0-1个元素。也就是说不是有就是没有。</p>
+</blockquote>
+<p>Flux和Mono是Java响应式中的重要概念，这其实是规定了两种流式范式，这种范式让数据具有一些新的特性，比如基于发布订阅的事件驱动，异步流、背压等等。另外数据是推送（Push）给消费者的以区别于平时我们的拉（Pull）模式。同时我们可以像Stream Api一样使用类似map、flatmap等操作符（operator）来操作它们。</p>
+<h3 id="创建Flux-Mono"><a class="header-anchor" href="#创建Flux-Mono">¶</a>创建Flux&amp;Mono</h3>
+<blockquote>
+<p>2022-12-10 22:23:21 先run，等明天起来再写(明天桌子和鼠标垫就到了，到时候直接原地起飞🚀)</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://www.yxyl6125.eu.org">YxYL</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://www.yxyl6125.eu.org/2022/12/10/WebFlux/">https://www.yxyl6125.eu.org/2022/12/10/WebFlux/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://www.yxyl6125.eu.org" target="_blank">YxYL</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/TODO-LIST/">TODO-LIST</a></div><div class="post_share"><div class="social-share" data-image="https://miro.medium.com/max/750/1*3pC1B4nF3kWCm8CYq8MqtQ.jpeg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2022/12/07/%E5%A4%A7%E4%BA%8C%E5%AF%92%E5%81%87TOTO-LIST/"><img class="next-cover" src="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/%E5%A3%81%E7%BA%B82.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">大二寒假TOTO-LIST</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/12/07/%E5%A4%A7%E4%BA%8C%E5%AF%92%E5%81%87TOTO-LIST/" title="大二寒假TOTO-LIST"><img class="cover" src="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/%E5%A3%81%E7%BA%B82.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-12-07</div><div class="title">大二寒假TOTO-LIST</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/favicon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">YxYL</div><div class="author-info__description">一场兵荒马乱的痛</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">12</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">15</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">11</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/YxYL6125"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is Why We</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%83%8C%E5%8E%8B"><span class="toc-number">1.</span> <span class="toc-text">背压</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">2.</span> <span class="toc-text">应用场景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Netflix-Hystrix-%E4%B8%AD%E7%9A%84%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3"><span class="toc-number">2.1.</span> <span class="toc-text">Netflix Hystrix 中的滑动窗口</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Flux-Mono"><span class="toc-number">3.</span> <span class="toc-text">Flux &amp; Mono</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BAFlux-Mono"><span class="toc-number">3.1.</span> <span class="toc-text">创建Flux&amp;Mono</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/12/10/WebFlux/" title="WebFlux——响应式编程"><img src="https://miro.medium.com/max/750/1*3pC1B4nF3kWCm8CYq8MqtQ.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="WebFlux——响应式编程"/></a><div class="content"><a class="title" href="/2022/12/10/WebFlux/" title="WebFlux——响应式编程">WebFlux——响应式编程</a><time datetime="2022-12-10T13:41:59.000Z" title="发表于 2022-12-10 21:41:59">2022-12-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/12/07/%E5%A4%A7%E4%BA%8C%E5%AF%92%E5%81%87TOTO-LIST/" title="大二寒假TOTO-LIST"><img src="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/%E5%A3%81%E7%BA%B82.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="大二寒假TOTO-LIST"/></a><div class="content"><a class="title" href="/2022/12/07/%E5%A4%A7%E4%BA%8C%E5%AF%92%E5%81%87TOTO-LIST/" title="大二寒假TOTO-LIST">大二寒假TOTO-LIST</a><time datetime="2022-12-07T11:59:54.000Z" title="发表于 2022-12-07 19:59:54">2022-12-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/11/19/%E6%9C%AC%E5%9C%B0%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%90%AD%E5%BB%BAk8s%E9%9B%86%E7%BE%A4/" title="本地虚拟机搭建k8s集群"><img src="https://api.r10086.com/img-api.php?type=鬼灭之刃横屏系列1" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="本地虚拟机搭建k8s集群"/></a><div class="content"><a class="title" href="/2022/11/19/%E6%9C%AC%E5%9C%B0%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%90%AD%E5%BB%BAk8s%E9%9B%86%E7%BE%A4/" title="本地虚拟机搭建k8s集群">本地虚拟机搭建k8s集群</a><time datetime="2022-11-19T04:29:43.000Z" title="发表于 2022-11-19 12:29:43">2022-11-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/11/12/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81Redisson/" title="分布式锁Redisson"><img src="https://www.dmoe.cc/random.php" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="分布式锁Redisson"/></a><div class="content"><a class="title" href="/2022/11/12/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81Redisson/" title="分布式锁Redisson">分布式锁Redisson</a><time datetime="2022-11-12T15:04:55.000Z" title="发表于 2022-11-12 23:04:55">2022-11-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/11/10/%E6%B5%85%E8%B0%88Redis%E4%B8%BB%E4%BB%8E%E3%80%81%E5%93%A8%E5%85%B5/" title="浅谈Redis主从、哨兵"><img src="https://www.dmoe.cc/random.php" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="浅谈Redis主从、哨兵"/></a><div class="content"><a class="title" href="/2022/11/10/%E6%B5%85%E8%B0%88Redis%E4%B8%BB%E4%BB%8E%E3%80%81%E5%93%A8%E5%85%B5/" title="浅谈Redis主从、哨兵">浅谈Redis主从、哨兵</a><time datetime="2022-11-10T14:47:25.000Z" title="发表于 2022-11-10 22:47:25">2022-11-10</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By YxYL</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
