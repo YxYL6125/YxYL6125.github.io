@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>CAS和原子类操作</title>
+      <link href="/2022/12/19/CAS%E5%92%8C%E5%8E%9F%E5%AD%90%E7%B1%BB%E6%93%8D%E4%BD%9C/"/>
+      <url>/2022/12/19/CAS%E5%92%8C%E5%8E%9F%E5%AD%90%E7%B1%BB%E6%93%8D%E4%BD%9C/</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+      
+      <categories>
+          
+          <category> CAS </category>
+          
+          <category> 原子性 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> TODO-LIST </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>JMM与并发三大特性</title>
       <link href="/2022/12/12/JMM%E4%B8%8E%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7/"/>
       <url>/2022/12/12/JMM%E4%B8%8E%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7/</url>
