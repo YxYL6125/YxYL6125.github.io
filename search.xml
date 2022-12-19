@@ -8,7 +8,7 @@
       <link href="/2022/12/19/CAS%E5%92%8C%E5%8E%9F%E5%AD%90%E7%B1%BB%E6%93%8D%E4%BD%9C/"/>
       <url>/2022/12/19/CAS%E5%92%8C%E5%8E%9F%E5%AD%90%E7%B1%BB%E6%93%8D%E4%BD%9C/</url>
       
-        <content type="html"><![CDATA[]]></content>
+        <content type="html"><![CDATA[<h2 id="什么是CAS"><a class="header-anchor" href="#什么是CAS">¶</a>什么是CAS</h2><p>CAS(Compare And Swap，比较并交换)，通常指的是这样一种原子操作：</p><blockquote><p>针对一个变量，首先先比较他的内存值与某个期望值是否相同，如果相同，就给他赋一个新值</p></blockquote><p>CAS的逻辑用伪代码描述如下：</p><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span>(value == expectedValue)&#123;</span><br><span class="line">value = newValue;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
       
       
       <categories>
