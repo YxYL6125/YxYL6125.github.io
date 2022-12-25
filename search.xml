@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>理解Java线程</title>
+      <link href="/2022/12/25/%E7%90%86%E8%A7%A3Java%E7%BA%BF%E7%A8%8B/"/>
+      <url>/2022/12/25/%E7%90%86%E8%A7%A3Java%E7%BA%BF%E7%A8%8B/</url>
+      
+        <content type="html"><![CDATA[<h2 id="线程进程"><a class="header-anchor" href="#线程进程">¶</a>线程进程</h2><h3 id="进程间通讯方式"><a class="header-anchor" href="#进程间通讯方式">¶</a>进程间通讯方式</h3><ol><li><strong>管道(pipe)及有名管道(name pipe)</strong>：管道可应用于具有亲缘关系的父子进程间的通信，有名管道除了具有管道所具有的所有功能之外，他还允许无亲缘关系进程之间的通信</li><li><strong>信号(signal)</strong>：信号是在软件层次上对中断机制的一种模拟，他是比较复杂的通信方式用于通知进程有某事件发生，一个进程收到一个信号，与处理器收到一个中断请求效果可以说是一致的</li><li><strong>消息队列(MQ)</strong>：MQ是消息的链接表，他克服了上面两种通信方式中信号量优先的缺点，具有写权限的进程可以按照一定的规则向MQ中添加新信息；对MQ有读权限进程看从MQ中读取信息</li><li><strong>共享内存(shared memory)</strong></li><li><strong>信号量(semaphore)</strong></li><li><strong>套接字(socket)</strong></li></ol><h3 id="线程的同步-互斥"><a class="header-anchor" href="#线程的同步-互斥">¶</a>线程的同步/互斥</h3><p>线程同步是指线程之间所具有的一种制约关系，一个线程的执行依赖另一个线程的消息，当它没有得到另一个线程的消息的时应等待，知道消息到达的时候才被唤醒</p><p><strong>线程互斥是指对于共享的进程系统资源，在各单个线程访问时的排他性</strong>。当由若干个线程都要使用某一个资源的时候，任何时刻最多只允许一个线程去使用，其他使用该资源的线程必须等待，知道占用者释放该资源。线程互斥可以看成是一种特殊的线程同步</p><p>那么我们改如何来控制线程的同步互斥呢：</p><h4 id="四种线程同步互斥的控制方法"><a class="header-anchor" href="#四种线程同步互斥的控制方法">¶</a>四种线程同步互斥的控制方法</h4><ul><li>临界区：通过对多线程的串行化来访问公共资源或者一段代码，速度快，适合控制数据访问</li><li>互斥量：为协调公共对一个共享资源的单独访问而设计的</li><li>信号量：为控制一个具有有限数量用户资源而设计的</li><li>事件：用来通知线程有一些事件已发生，从而启动后续任务的开始</li></ul><h2 id="用户模式、内核模式"><a class="header-anchor" href="#用户模式、内核模式">¶</a>用户模式、内核模式</h2><p>绝大多数的操作系统都可以显示CPU的使用情况，在win上面，我们可以使用任务管理器查看，</p><p><img src="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/6a0120a85dcdae970b0120a86db3c5970b-pi.png" alt="img"></p><p>CPU的使用率大体可以表示CPU花在处理非空闲任务的时间的比率，这只是一种简化的说法。实际上，在所有的现代的操作系统中，CPU是在两种不同的模式下运行的：</p><ol><li><p><strong>Kernel Mode</strong></p><p>在内核模式下，代码具有对硬件的所有控制权限。可以执行所有CPU指令，可以访问任意地址的内存。内核模式是为操作系统最底层，最可信的函数服务。在内核模式下的任何异常都是灾难性的将会导致整台机器宕机</p></li><li><p><strong>User Mode</strong></p><p>在用户模式下，代码没有对硬件的直接控制权限，也不能直接访问。程序是通过调用系统接口<code>(System APIs)</code>来达到访问硬件和内存。在这种保护模式下，即使程序发生panic也是可以回复的，在你的电脑上大部分程序都是在用户模式下运行的</p></li></ol><p>如上图所示，可以让任务管理器显示内核CPU占用时间。<br>绿色的表示总的CPU时间，红色的线表示内核使用的CPU使用，两者之间的间隔就是用户程序使用的CPU时间。</p><p>上面所说的两种模式不仅仅是字面上的区别，他们是受CPU严格制约的。如果在用户模式下，程序尝试做其权限之外的事情，比如说，执行一条高权限的CPU指令，修改其被禁止访问的内存，这个时候，一个可捕获的异常就会抛出。但是只会导致这个倒霉的应用程序panic，而不会当你的整个系统panic，这也是用户模式的存在意义</p><p>应用程序一般会在一下几种情况下切换到内核模式：</p><ul><li>系统调用</li><li>异常事件：当发生某些预见不可知的异常时，就会切换到内核态，以执行相关的异常事件</li><li>设备中断：在使用外围设备时，图外围设备完成了用户请求，就会向CPU发送一个中断信号，此时，CPU就会暂停执行原本的下一条指令，转去处理中断事件。此时，如果原来在用户态，则自然就会切换到内核态</li></ul><blockquote><p>CAS操作不会涉及到用户态切换到内核态</p></blockquote><h2 id="Java线程"><a class="header-anchor" href="#Java线程">¶</a>Java线程</h2><h2 id="终止线程"><a class="header-anchor" href="#终止线程">¶</a>终止线程</h2><h2 id="线程间通讯"><a class="header-anchor" href="#线程间通讯">¶</a>线程间通讯</h2>]]></content>
+      
+      
+      <categories>
+          
+          <category> TODO-LIST </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> TODO-LIST </tag>
+            
+            <tag> 线程 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>CAS和原子类操作</title>
       <link href="/2022/12/19/CAS%E5%92%8C%E5%8E%9F%E5%AD%90%E7%B1%BB%E6%93%8D%E4%BD%9C/"/>
       <url>/2022/12/19/CAS%E5%92%8C%E5%8E%9F%E5%AD%90%E7%B1%BB%E6%93%8D%E4%BD%9C/</url>
@@ -44,9 +71,9 @@
       
       <categories>
           
-          <category> 并发编程 </category>
-          
           <category> TODO-LIST </category>
+          
+          <category> 并发编程 </category>
           
           <category> 八股 </category>
           
