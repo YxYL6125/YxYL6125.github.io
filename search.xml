@@ -4,6 +4,58 @@
   
     
     <entry>
+      <title>2022年度总结</title>
+      <link href="/2022/12/31/2022%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/"/>
+      <url>/2022/12/31/2022%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/</url>
+      
+        <content type="html"><![CDATA[<h2 id="现在是北京时间2022-12-31-21-50-32"><a class="header-anchor" href="#现在是北京时间2022-12-31-21-50-32">¶</a>现在是北京时间2022-12-31 21:50:32</h2><p>想来这一年过的的确是很快，我记得在去年的这个时候，我可能还在学Servlet吧(或许还没学到Servlet)</p><p>这一年想必是我变化挺大的，包括但不仅仅体现在人际、技术栈、学习方面</p><p>但我还是就这几个方面进行简单的总结以及规划吧……</p><h3 id="技术栈"><a class="header-anchor" href="#技术栈">¶</a>技术栈</h3><p>我想就连我自己都没想到，一年前，连什么是Servlet都不知道的人，现在在捣鼓JVM，JMM……</p><p>这一年里，大大小小，从Servlet，到SSM，Spring，SpringBoot，Redis，Docker，ES，Nginx，MongoDB，Kotlin，Rabbit，SpringCloud，Groovy……</p><p>这一路走来，说多说少，虽不如别人狠卷，但是应该还是超过大部分人的，这一直以来都是我的生存方式，可能是从高中的时候就形成了，我倒是希望以后还是保持这样的方式，继续生存下去。</p><p>现在正在深入底层的学习，像内存模型，线程模型，多线程底层原理，争取在寒假的时候，吧这些东西都过一遍；</p><p>在下学期——大二下的时候，整个全栈都走一遍，面经，八股……</p><p>偶对了，算法——也是我最薄弱的东西，可以说是，从来没有系统的接触过算法吧，尽力在下学期的时候，包括暑假期间，每天与算法陪伴💩</p><p>⭐计划在大三上期的时候，找到一个理想的实习⭐</p><p>我太想自己养活自己了……</p><h3 id="学习"><a class="header-anchor" href="#学习">¶</a>学习</h3><p>说来也是好笑，现在都已经好久没有认证的听过课了……</p><p>自从上大学以来，就再也没有想以前读书那样，认认真真，沉下心来思考过一个问题了</p><p>我觉得有78%的原因，是因为位置吧……</p><p>现在已经处于一个，很危险的阶段了——挂~</p><p>但是好笑的是，这一学年以来，居然还有我的位置，逆天，这软件工程是有多水</p><p>b话就不多说了，确实是我的问题，自制力远不如前了可以说是</p><p>💤在下学期的时候，在上课就认真听讲，不能再抱有后补的思想来过日子了~💤</p><h3 id="感情"><a class="header-anchor" href="#感情">¶</a>感情</h3><blockquote><p>这是我最疑惑的</p></blockquote><p>谁不想曾经，或正在拥有一个粉色的大学情感经历</p><p>我倒是希望会有个女孩子，她像是在星空中闪耀着，由着我去追随，她最好的是我心目中那样</p><p>💩我也不知道我会不会接收退而求其次这样的事情……</p><p>今天跟那个男人吹过之后，倒是有点着急了，很怕大学过完，连个女朋友都没有，校园生活全都是code是吧</p><p>⭐希望，在下学期乃至以后的生活中，一定遇到那个我生命里的转角，我会去想办法追随……</p><h3 id="社交"><a class="header-anchor" href="#社交">¶</a>社交</h3><p>在这方面，应该算是这几个模块里面，做的最好的了</p><p>社交方面涉猎的挺广的</p><p>有认识很厉害的学长，前辈；志同道合的朋友，那个男人；元帅；工作室的带伙💥……</p><p>再接再厉吧··</p><h3 id="最后"><a class="header-anchor" href="#最后">¶</a>最后</h3><blockquote><p>在新的一年中，每天都是慷慨的……</p><p>不一定日子要在猛烈的节奏中度过，</p><p>有时候，</p><p><strong>“纯音乐，请欣赏”</strong></p><p>这样也挺好……</p><p>现在是北京时间2022-12-31 22:44:23</p><p>拜拜，2022</p><p>(¦3[▓▓] 晚安💤</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 唠话 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 总结 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>JVM内存结构</title>
+      <link href="/2022/12/31/JVM%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/"/>
+      <url>/2022/12/31/JVM%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+      
+      <categories>
+          
+          <category> TODO-LIST </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> JVM </tag>
+            
+            <tag> 内存结构 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Jvm类加载机制</title>
       <link href="/2022/12/30/Jvm%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/"/>
       <url>/2022/12/30/Jvm%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/</url>
@@ -129,9 +181,9 @@
       
       <categories>
           
-          <category> 并发编程 </category>
-          
           <category> TODO-LIST </category>
+          
+          <category> 并发编程 </category>
           
           <category> 八股 </category>
           
