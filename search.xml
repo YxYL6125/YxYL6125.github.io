@@ -156,9 +156,9 @@
           
           <category> TODO-LIST </category>
           
-          <category> 八股 </category>
-          
           <category> JVM </category>
+          
+          <category> 八股 </category>
           
       </categories>
       
@@ -245,9 +245,9 @@
           
           <category> TODO-LIST </category>
           
-          <category> 八股 </category>
-          
           <category> CAS </category>
+          
+          <category> 八股 </category>
           
       </categories>
       
@@ -399,9 +399,9 @@
       
         <tags>
             
-            <tag> 部署 </tag>
-            
             <tag> k8s </tag>
+            
+            <tag> 部署 </tag>
             
             <tag> 运维 </tag>
             
@@ -538,9 +538,9 @@
       
         <tags>
             
-            <tag> 微服务 </tag>
-            
             <tag> 部署 </tag>
+            
+            <tag> 微服务 </tag>
             
         </tags>
       
