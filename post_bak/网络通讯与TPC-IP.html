@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="利用通信线路将地理上分散的、具有独立功能的计算机系统和通信设备按不同的形式连接起来，以功能完善的网络软件及协议实现资源共享和信息传递的系统。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="网络通讯与TPC&#x2F;IP">
+<meta property="og:url" content="https://www.yxyl6125.eu.org/post_bak/%E7%BD%91%E7%BB%9C%E9%80%9A%E8%AE%AF%E4%B8%8ETPC-IP.html">
+<meta property="og:site_name" content="YxYL🥝">
+<meta property="og:description" content="利用通信线路将地理上分散的、具有独立功能的计算机系统和通信设备按不同的形式连接起来，以功能完善的网络软件及协议实现资源共享和信息传递的系统。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20221015165435767.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20221015165526473.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20221015185133497.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20221015185221395.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20221015200329440.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20221015203150879.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20221015204050802.png">
+<meta property="article:published_time" content="2022-10-16T01:30:08.000Z">
+<meta property="article:modified_time" content="2022-10-16T01:30:08.000Z">
+<meta property="article:author" content="YxYL">
+<meta property="article:tag" content="TCP&#x2F;IP">
+<meta property="article:tag" content="网络编程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20221015165435767.png">
+    
+    
+      
+        
+          
+            <link rel="shortcut icon" href="https://www.gravatar.com/avatar/1c0ccb80f18de6871d3fd37b97cd3594?s=48">
+          
+        
+      
+      
+        
+          
+            <link rel="icon" type="image/png" href="https://www.gravatar.com/avatar/1c0ccb80f18de6871d3fd37b97cd3594?s=192" sizes="192x192">
+          
+        
+      
+      
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="https://www.gravatar.com/avatar/1c0ccb80f18de6871d3fd37b97cd3594?s=180">
+          
+        
+      
+    
+    <!-- title -->
+    <title>网络通讯与TPC/IP</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+    <script async defer
+            data-website-id="e77e68be-f6e4-4br3-9365-2b76b57cd571"
+            src="https://analytics.domain.com/umami.js">
+    </script>
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/Butterfly-double-row-display@1.00/cardlistpost.min.css"/>
+<style>#recent-posts > .recent-post-item >.recent-post-info > .article-meta-wrap > .tags:before {content:"\A";
+  white-space: pre;}#recent-posts > .recent-post-item >.recent-post-info > .article-meta-wrap > .tags > .article-meta__separator{display:none}</style>
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+    <div class="content index py4 ">
+        
+          <header id="header">
+  <a class="u-url u-uid" href="/">
+  
+    
+      <img id="logo" alt class="u-logo" src="/images/logo.png" />
+    
+  
+    <div id="title">
+      <h1 class="p-name">YxYL🥝</h1>
+    </div>
+  </a>
+  <div id="nav">
+    <ul>
+      <li class="icon">
+        <a href="#" aria-label="目录"><i class="fa-solid fa-bars fa-2x"></i></a>
+      </li>
+      <!--
+     --><li><a href="/">首页</a></li><!--
+   --><!--
+     --><li><a href="/about/">关于</a></li><!--
+   --><!--
+     --><li><a href="/archives/">归档</a></li><!--
+   --><!--
+     --><li><a href="/category/">分类</a></li><!--
+   --><!--
+     --><li><a href="/tags/">tags</a></li><!--
+   --><!--
+     --><li><a target="_blank" rel="noopener" href="https://github.com/YxYL6125">项目</a></li><!--
+   -->
+    </ul>
+  </div>
+</header>
+
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  
+
+  <div class="content" itemprop="articleBody">
+      
+          <h1>网络通信与TCP/IP</h1>
+<p>什么是计算机的网络？<br>
+老套路、官方话：</p>
+<blockquote>
+<p>利用通信线路将地理上分散的、具有独立功能的计算机系统和通信设备按不同的形式连接起来，以功能完善的网络软件及协议实现资源共享和信息传递的系统。</p>
+</blockquote>
+<p><strong>主要的网络</strong>：</p>
+<ol>
+<li>局域网</li>
+<li>城域网</li>
+<li>广域网</li>
+<li>无线网</li>
+<li>…</li>
+</ol>
+<p>P话就不多说了，直接进入主题吧</p>
+<p>首先是，网络通讯的鼻祖、<strong>OSI七层模型</strong>：</p>
+<img src="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20221015165435767.png" alt="image-20221015165435767" align="left" style="zoom: 50%;" />
+<p>再到我们现在的<strong>TCP/IP五层模型</strong>：</p>
+<img src="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20221015165526473.png" alt="image-20221015165526473"  align="left" style="zoom:71%;" />
+<p>从图片中可以看出来，TCPIP只是把OSI的上三层合并为了一层，应用层。</p>
+<p>方便记忆：</p>
+<ul>
+<li>应用层：平时我们访问使用的http(bushi)、https协议；或者远程连接的Mysql；远程连接的SSH…</li>
+<li>传输层：
+<ul>
+<li>TCP协议：面向连接的、可靠的流协议</li>
+<li>UDP协议：面向无连接的通讯协议</li>
+</ul>
+</li>
+<li>网络层：IP地址</li>
+<li>数据链路层：硬件驱动程序，追究到底还是</li>
+<li>物理层：网卡</li>
+</ul>
+<p>有些说法是吧最底层的物理层+数据链路层合成一层，但其实不是…</p>
+<h2 id="浅谈TCP-UDP"><a class="header-anchor" href="#浅谈TCP-UDP">¶</a>浅谈TCP/UDP</h2>
+<p>从上文看到，TCP协议是面向连接的、可靠的流协议；而UDP是面向无连接的通讯协议</p>
+<p>TCP首先是要建立连接的，他会有我们平常所说的3次握手，</p>
+<p>为什么要建立连接呢？</p>
+<blockquote>
+<p>1.更好的保证可靠性: 建立连接的过程其实就是让通信双方验证各自的发送能力和接受能力是否正常<br>
+2.协商一些重要参数 (如: 序号的初始值)</p>
+</blockquote>
+<p>具体怎么建立连接？</p>
+<blockquote>
+<p>栗子：</p>
+<p>A给B打电话，打电话同样要同样给自己以及对方的话筒是否正常工作</p>
+<p>第一次握手：刚开始，A不知道自己和B书籍的听筒的话筒是否正常，所以A说：“喂喂喂？？？”</p>
+<p>第二次握手：B听到过后，说明A的话筒和B的听筒正常，但B还需要进一步的检查自己的话筒是否正常；同时B吧A话筒正常和自己听筒正常的消息传给A；于是B：”干嘛？你爹！”</p>
+<p>第三次握手：A收到了B的消息后，就证明了A听筒正常，B听筒正常</p>
+</blockquote>
+<p>这就类似于网络建立连接的三次握手…</p>
+<p>所以，网络中传输数据整体过程是这样的：</p>
+<blockquote>
+<p>又是一个栗子：在消息发送的过程中</p>
+<p>首先我们吧消息编辑好，点击发送button，此时，这个消息还处于<strong>应用层</strong>。点击button后，进入传输层，被解析成，计算机唯一认识的01二进制，再加上大概20个字节的TCP首部，形成<strong>报文</strong>，或者是所谓的<strong>消息</strong>；</p>
+<p>然后，传进网络层，加上IP包首部——&gt;报文段</p>
+<p>传进数据链路层，加上以太网首部——&gt;数据报</p>
+<p>最后进入物理层，通过网卡等硬件，带上型信号，传进以太网电缆。</p>
+<p>等这个<strong>帧</strong>，被甲方接收到过后，通过以上的顺序的反解析，一步一步脱壳成最初我们所编辑的数据包，展示在甲方的应用层上。这时，甲方手机上显现一个：“我是你爹”<br>
+的时候就</p>
+<p>完成的数据(消息)的传输</p>
+</blockquote>
+<hr>
+<p><strong>而UDP</strong></p>
+<p>他最主要的特点就是、UDP是无连接的，就是发送数据之前不需要建立连接，这也是与TCP协议的本质区别，当然，发送数据结束的时候也没有连接可以释放，一次，就减少了开销和发送数据之前的延迟，</p>
+<p>目前QQ，微信，语音电话、视频……之类的通讯大都基于UDP的通信协议，因为大都人不会因为你那一个像素点，一句话两句话听不清楚就抱怨什么(没有针对一些比较紧急的场景)</p>
+<h2 id="网络通讯中的地址与端口号"><a class="header-anchor" href="#网络通讯中的地址与端口号">¶</a>网络通讯中的地址与端口号</h2>
+<h3 id="地址Address"><a class="header-anchor" href="#地址Address">¶</a>地址Address</h3>
+<ul>
+<li>IP地址和MAC地址</li>
+</ul>
+<img src="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20221015185133497.png" alt="image-20221015185133497" align="left" style="zoom:60%; " />
+<img src="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20221015185221395.png" alt="image-20221015185221395" align="left" style="zoom:50%; " />
+<p>打开<strong>win</strong>的<strong>powerShell</strong>，输入：<code>ipconfig</code>可以看到自己设备信息</p>
+<p>这里的物理地址就是MAC地址。MAC地址是厂商开始创建这个设备的时候就将其写在点的硬件上的。所以每个设备只有一个MAC地址，还是不能修改的(除非说是你通过物理手段，修改BIOS，修改MAC地址)，所以MAC地址实在TCP的数据链路层上用的，也可以理解成数据链路层的地址。</p>
+<p>看到我电脑上无线局局域网Adapter (WALN) 下的MAC地址是：E0-D4-64-31-CA-13，前一半是<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%94%B5%E6%B0%94%E7%94%B5%E5%AD%90%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%AD%A6%E4%BC%9A">IEEE</a>给每个厂商一个，后面一半由厂商自己分配</p>
+<p>IPV4就不用说了，没有IPV4是没法上网的，这个东西要么手动获取，要么DHCP服务器给分配IPV4</p>
+<ul>
+<li>
+<p>MAC地址与IPV4的区别</p>
+<blockquote>
+<ol>
+<li>MAC地址不能随意更换，IPV4可以</li>
+<li>MAC地址48位，IPV4是32位</li>
+<li>MAC地址工作在数据链路层，IPV4工作在网络层</li>
+</ol>
+</blockquote>
+</li>
+</ul>
+<h3 id="端口Port"><a class="header-anchor" href="#端口Port">¶</a>端口Port</h3>
+<p>官方：</p>
+<blockquote>
+<p>用来识别同一台计算机设备设备中不同的应用程序，也被称之为应用程序地址</p>
+</blockquote>
+<ul>
+<li>
+<p>为什么端口号有65535个？</p>
+<blockquote>
+<p>因为TCP和UDP协议里面报文头中吗，有专门的的字段来存这个端口号，这个字段头只有2个字节，2^16 = 65536 ，但是一般端口0只带本设备上所有的端口。</p>
+<p>所以端口号只有65536 - 1 =  65535个</p>
+</blockquote>
+</li>
+<li>
+<p>一台设备上最多只能有65535个TCP连接嘛？</p>
+<blockquote>
+<p>这是可笑的，</p>
+<p>一个栗子：现有10个客户端连接一台机器上的Mysql，Mysql也只是接收到了3306这个端口上发送来的数据，</p>
+<p>所以，一台设备上所能接收到的链接，与端口号数没有必然关系。</p>
+</blockquote>
+</li>
+</ul>
+<p>再者，一个通讯在网络中是由5个元组识别：</p>
+<ol>
+<li>源IP</li>
+<li>目标IP</li>
+<li>TCP协议号</li>
+<li>源端口</li>
+<li>目标端口</li>
+</ol>
+<p><img src="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20221015200329440.png" alt="image-20221015200329440"></p>
+<h3 id="TCP三次握手建立连接"><a class="header-anchor" href="#TCP三次握手建立连接">¶</a>TCP三次握手建立连接</h3>
+<p>图片来自：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1c4411d7jb?p=65&amp;vd_source=61258a05469482a4381c086011c25c18">https://www.bilibili.com/video/BV1c4411d7jb?p=65&amp;vd_source=61258a05469482a4381c086011c25c18</a></p>
+<p>TCP报文的首部格式</p>
+<p><img src="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20221015203150879.png" alt="image-20221015203150879"></p>
+<p>至于三次握手的流程我就懒得用文字来描述了，用图片的方式可能更好记忆一点(可能纯粹就是懒吧…)</p>
+<img src="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20221015204050802.png" alt="image-20221015204050802" align="left" style="zoom:70%;" />
+<p>其中SYN是TCP报文里面某一个bit的站位标志。</p>
+<p>出于这样的连接方式，TCP的三次握手也是会有漏洞，——SYN洪泛攻击</p>
+<p><strong>SYN洪泛攻击</strong>，是通过网络服务所在的端口发送大量伪造源地址的攻击报文，发送到服务端，造成服务端上的<strong>半开连接</strong>，队列被占满，从而组织其他用户进行访问。</p>
+<p><strong>原理</strong></p>
+<blockquote>
+<p>攻击者客户端利用为伪造的IP地址想服务端发出请求(第一次)。而服务端的响应(第二次)的报文将永远发送不到真实的客户端，服务端在等待客户端的第三次握手(其实永远不会有的，毕竟是伪造的)，服务端在这种半开的链接过程中小号了资源，如果有成千上万的这样链接，主机资源将被耗尽，从而发达到攻击的目的，就有点像DDOS攻击，都是发送大量的数据包。</p>
+</blockquote>
+<p><strong>解决方案</strong></p>
+<blockquote>
+<ul>
+<li>无效连接监控释放</li>
+<li>延缓TCB分配方法</li>
+<li>防火墙</li>
+</ul>
+</blockquote>
+
+        
+  </div>
+</article>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2021-2023
+    YxYL
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/category/">分类</a></li><!--
+     --><!--
+       --><li><a href="/tags/">tags</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/YxYL6125">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

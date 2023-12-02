@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="使用本地虚拟机搭建K8S集群">
+<meta property="og:type" content="website">
+<meta property="og:title" content="本地虚拟机搭建k8s集群">
+<meta property="og:url" content="https://www.yxyl6125.eu.org/post_bak/%E6%9C%AC%E5%9C%B0%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%90%AD%E5%BB%BAk8s%E9%9B%86%E7%BE%A4.html">
+<meta property="og:site_name" content="YxYL🥝">
+<meta property="og:description" content="使用本地虚拟机搭建K8S集群">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20221119095421318.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20221119095700546.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20221119123545481.png">
+<meta property="article:published_time" content="2022-11-19T04:29:43.000Z">
+<meta property="article:modified_time" content="2022-11-19T04:29:43.000Z">
+<meta property="article:author" content="YxYL">
+<meta property="article:tag" content="k8s">
+<meta property="article:tag" content="部署">
+<meta property="article:tag" content="运维">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20221119095421318.png">
+    
+    
+      
+        
+          
+            <link rel="shortcut icon" href="https://www.gravatar.com/avatar/1c0ccb80f18de6871d3fd37b97cd3594?s=48">
+          
+        
+      
+      
+        
+          
+            <link rel="icon" type="image/png" href="https://www.gravatar.com/avatar/1c0ccb80f18de6871d3fd37b97cd3594?s=192" sizes="192x192">
+          
+        
+      
+      
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="https://www.gravatar.com/avatar/1c0ccb80f18de6871d3fd37b97cd3594?s=180">
+          
+        
+      
+    
+    <!-- title -->
+    <title>本地虚拟机搭建k8s集群</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+    <script async defer
+            data-website-id="e77e68be-f6e4-4br3-9365-2b76b57cd571"
+            src="https://analytics.domain.com/umami.js">
+    </script>
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/Butterfly-double-row-display@1.00/cardlistpost.min.css"/>
+<style>#recent-posts > .recent-post-item >.recent-post-info > .article-meta-wrap > .tags:before {content:"\A";
+  white-space: pre;}#recent-posts > .recent-post-item >.recent-post-info > .article-meta-wrap > .tags > .article-meta__separator{display:none}</style>
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+    <div class="content index py4 ">
+        
+          <header id="header">
+  <a class="u-url u-uid" href="/">
+  
+    
+      <img id="logo" alt class="u-logo" src="/images/logo.png" />
+    
+  
+    <div id="title">
+      <h1 class="p-name">YxYL🥝</h1>
+    </div>
+  </a>
+  <div id="nav">
+    <ul>
+      <li class="icon">
+        <a href="#" aria-label="目录"><i class="fa-solid fa-bars fa-2x"></i></a>
+      </li>
+      <!--
+     --><li><a href="/">首页</a></li><!--
+   --><!--
+     --><li><a href="/about/">关于</a></li><!--
+   --><!--
+     --><li><a href="/archives/">归档</a></li><!--
+   --><!--
+     --><li><a href="/category/">分类</a></li><!--
+   --><!--
+     --><li><a href="/tags/">tags</a></li><!--
+   --><!--
+     --><li><a target="_blank" rel="noopener" href="https://github.com/YxYL6125">项目</a></li><!--
+   -->
+    </ul>
+  </div>
+</header>
+
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  
+
+  <div class="content" itemprop="articleBody">
+      
+          <h1>本地虚拟机搭建k8s集群</h1>
+<p>为什么是虚拟机呢</p>
+<ul>
+<li>没钱</li>
+<li>没钱</li>
+<li>…</li>
+</ul>
+<p>其实就是没钱买aliyun下同网段的机器，目前只有一个马ht机器，和阿里机器，没有在一个网段上，而虚拟机正好可以很简单直接的解决我的问题</p>
+<p>开始之前，部署k8s集群的机器要满足：</p>
+<ul>
+<li>一台或多台机器</li>
+<li>2GB或者更多的RAM，2个或者更多CUP，30G以上的ROM</li>
+<li>集群中所有机器之前可以网络互通</li>
+<li>可以访问外网，需要拉取镜像</li>
+<li>禁止swap分区</li>
+</ul>
+<h2 id="准备好Linux"><a class="header-anchor" href="#准备好Linux">¶</a>准备好Linux</h2>
+<h3 id="首先：得到一-多-份双网卡Centos"><a class="header-anchor" href="#首先：得到一-多-份双网卡Centos">¶</a>首先：得到一(多)份双网卡Centos</h3>
+<p>创建虚拟机的过程就不说了</p>
+<p>这里就直接说配置静态id</p>
+<h4 id="查看本地Vmnet8"><a class="header-anchor" href="#查看本地Vmnet8">¶</a>查看本地Vmnet8</h4>
+<img src="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20221119095421318.png" alt="image-20221119095421318" style="zoom:75%;" align="left" />
+<img src="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20221119095700546.png" alt="image-20221119095700546" align="left"   />
+<p>偶对了，在创建虚拟机的时候，选择网卡：Vmnet8，这样才能联通网</p>
+<h4 id="接着修改ip地址"><a class="header-anchor" href="#接着修改ip地址">¶</a>接着修改ip地址</h4>
+<p><strong>进入存放修改ip地址的目录：</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd /etc/sysconfig/network-scripts/</span><br></pre></td></tr></table></figure>
+<p><strong>修改文件：</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vim /etc/sysconfig/network-scripts/ifcfg-ens33</span><br></pre></td></tr></table></figure>
+<ol>
+<li>
+<p>修改BOOTPROTO=static</p>
+</li>
+<li>
+<p>在下面添加内容：IP地址、子网掩码、网关、dns服务器</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">IPADDR=192.168.75.100 ——&gt; 前面三个和网关一样</span><br><span class="line">GATEWAY=192.168.75.2 ——&gt; 上面提到的Gateway</span><br><span class="line">NETMASK=255.255.255.0</span><br><span class="line">DNS1=218.4.4.4</span><br><span class="line">DNS2=8.8.8.8</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p><strong>重启网络服务</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">systemctl restart network</span><br></pre></td></tr></table></figure>
+<h3 id="再配置免密登录-远程连接"><a class="header-anchor" href="#再配置免密登录-远程连接">¶</a>再配置免密登录+远程连接</h3>
+<p>先鸽…</p>
+<p>2022-11-19 12:10:31</p>
+<h2 id="开始搭建集群"><a class="header-anchor" href="#开始搭建集群">¶</a>开始搭建集群</h2>
+<h3 id="安装docker环境"><a class="header-anchor" href="#安装docker环境">¶</a>安装docker环境</h3>
+<ol>
+<li>
+<p>移除以前docker的相关包</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo yum remove docker \</span><br><span class="line">                  docker-client \</span><br><span class="line">                  docker-client-latest \</span><br><span class="line">                  docker-common \</span><br><span class="line">                  docker-latest \</span><br><span class="line">                  docker-latest-logrotate \</span><br><span class="line">                  docker-logrotate \</span><br><span class="line">                  docker-engine</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>配置yum源</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo yum install -y yum-utils</span><br><span class="line">sudo yum-config-manager \</span><br><span class="line">--add-repo \</span><br><span class="line">http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>安装docker(这里安装的是20.10.7版本的)</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">以下是在安装k8s的时候使用</span></span><br><span class="line">yum install -y docker-ce-20.10.7 docker-ce-cli-20.10.7  containerd.io-1.4.6</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>启动</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">systemctl enable docker --now</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>配置加速</p>
+<blockquote>
+<p>这里额外添加了docker的生产环境核心配置cgroup</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo mkdir -p /etc/docker</span><br><span class="line">sudo tee /etc/docker/daemon.json &lt;&lt;-&#x27;EOF&#x27;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;https://82m9ar63.mirror.aliyuncs.com&quot;],</span><br><span class="line">  &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;],</span><br><span class="line">  &quot;log-driver&quot;: &quot;json-file&quot;,</span><br><span class="line">  &quot;log-opts&quot;: &#123;</span><br><span class="line">    &quot;max-size&quot;: &quot;100m&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;storage-driver&quot;: &quot;overlay2&quot;</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>docker环境成功，可以试一试命令了…</p>
+</li>
+</ol>
+<h3 id="安装kubectl、kubeadm、kubelet"><a class="header-anchor" href="#安装kubectl、kubeadm、kubelet">¶</a>安装kubectl、kubeadm、kubelet</h3>
+<h4 id="基础环境"><a class="header-anchor" href="#基础环境">¶</a>基础环境</h4>
+<blockquote>
+<p>所有机器都要执行</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">各个机器设置自己的域名</span></span><br><span class="line">hostnamectl set-hostname xxxx</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">将 SELinux 设置为 permissive 模式（相当于将其禁用）</span></span><br><span class="line">sudo setenforce 0</span><br><span class="line">sudo sed -i &#x27;s/^SELINUX=enforcing$/SELINUX=permissive/&#x27; /etc/selinux/config</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">关闭swap</span></span><br><span class="line">swapoff -a  </span><br><span class="line">sed -ri &#x27;s/.*swap.*/#&amp;/&#x27; /etc/fstab</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">允许 iptables 检查桥接流量</span></span><br><span class="line">cat &lt;&lt;EOF | sudo tee /etc/modules-load.d/k8s.conf</span><br><span class="line">br_netfilter</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">cat &lt;&lt;EOF | sudo tee /etc/sysctl.d/k8s.conf</span><br><span class="line">net.bridge.bridge-nf-call-ip6tables = 1</span><br><span class="line">net.bridge.bridge-nf-call-iptables = 1</span><br><span class="line">EOF</span><br><span class="line">sudo sysctl --system</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cat &lt;&lt;EOF | sudo tee /etc/yum.repos.d/kubernetes.repo</span><br><span class="line">[kubernetes]</span><br><span class="line">name=Kubernetes</span><br><span class="line">baseurl=http://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=0</span><br><span class="line">repo_gpgcheck=0</span><br><span class="line">gpgkey=http://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg</span><br><span class="line">   http://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg</span><br><span class="line">exclude=kubelet kubeadm kubectl</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">sudo yum install -y kubelet-1.20.9 kubeadm-1.20.9 kubectl-1.20.9 --disableexcludes=kubernetes</span><br><span class="line"></span><br><span class="line">sudo systemctl enable --now kubelet</span><br></pre></td></tr></table></figure>
+<h3 id="使用kubeadm引导集群"><a class="header-anchor" href="#使用kubeadm引导集群">¶</a>使用kubeadm引导集群</h3>
+<h4 id="下载各个机器需要的镜像"><a class="header-anchor" href="#下载各个机器需要的镜像">¶</a>下载各个机器需要的镜像</h4>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo tee ./images.sh &lt;&lt;-&#x27;EOF&#x27;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">images=(</span><br><span class="line">kube-apiserver:v1.20.9</span><br><span class="line">kube-proxy:v1.20.9</span><br><span class="line">kube-controller-manager:v1.20.9</span><br><span class="line">kube-scheduler:v1.20.9</span><br><span class="line">coredns:1.7.0</span><br><span class="line">etcd:3.4.13-0</span><br><span class="line">pause:3.2</span><br><span class="line">)</span><br><span class="line">for imageName in $&#123;images[@]&#125; ; do</span><br><span class="line">docker pull registry.cn-hangzhou.aliyuncs.com/lfy_k8s_images/$imageName</span><br><span class="line">done</span><br><span class="line">EOF</span><br><span class="line">   </span><br><span class="line">chmod +x ./images.sh &amp;&amp; ./images.sh</span><br></pre></td></tr></table></figure>
+<h4 id="初始化主节点"><a class="header-anchor" href="#初始化主节点">¶</a>初始化主节点</h4>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">所有机器添加master域名映射，以下需要修改为自己的</span></span><br><span class="line">echo &quot;172.31.0.4  cluster-endpoint&quot; &gt;&gt; /etc/hosts</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">主节点初始化</span></span><br><span class="line">kubeadm init \</span><br><span class="line">--apiserver-advertise-address=172.31.0.4 \</span><br><span class="line">--control-plane-endpoint=cluster-endpoint \</span><br><span class="line">--image-repository registry.cn-hangzhou.aliyuncs.com/lfy_k8s_images \</span><br><span class="line">--kubernetes-version v1.20.9 \</span><br><span class="line">--service-cidr=10.96.0.0/16 \</span><br><span class="line">--pod-network-cidr=192.168.0.0/16</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">所有网络范围不重叠</span></span><br></pre></td></tr></table></figure>
+<p>接下来就会：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">Your Kubernetes control-plane has initialized successfully!</span><br><span class="line"></span><br><span class="line">To start using your cluster, you need to run the following as a regular user:</span><br><span class="line"></span><br><span class="line">  mkdir -p $HOME/.kube</span><br><span class="line">  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config</span><br><span class="line">  sudo chown $(id -u):$(id -g) $HOME/.kube/config</span><br><span class="line"></span><br><span class="line">Alternatively, if you are the root user, you can run:</span><br><span class="line"></span><br><span class="line">  export KUBECONFIG=/etc/kubernetes/admin.conf</span><br><span class="line"></span><br><span class="line">You should now deploy a pod network to the cluster.</span><br><span class="line">Run &quot;kubectl apply -f [podnetwork].yaml&quot; with one of the options listed at:</span><br><span class="line">  https://kubernetes.io/docs/concepts/cluster-administration/addons/</span><br><span class="line"></span><br><span class="line">You can now join any number of control-plane nodes by copying certificate authorities</span><br><span class="line">and service account keys on each node and then running the following as root:</span><br><span class="line"></span><br><span class="line">  kubeadm join cluster-endpoint:6443 --token hums8f.vyx71prsg74ofce7 \</span><br><span class="line">    --discovery-token-ca-cert-hash sha256:a394d059dd51d68bb007a532a037d0a477131480ae95f75840c461e85e2c6ae3 \</span><br><span class="line">    --control-plane </span><br><span class="line"></span><br><span class="line">Then you can join any number of worker nodes by running the following on each as root:</span><br><span class="line"></span><br><span class="line">kubeadm join cluster-endpoint:6443 --token hums8f.vyx71prsg74ofce7 \</span><br><span class="line">    --discovery-token-ca-cert-hash sha256:a394d059dd51d68bb007a532a037d0a477131480ae95f75840c461e85e2c6ae3</span><br></pre></td></tr></table></figure>
+<p>看到里面说：<code>Alternatively, if you are the root user, you can run:</code>吧</p>
+<p>那就执行下面的命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mkdir -p $HOME/.kube</span><br><span class="line">sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config</span><br><span class="line">sudo chown $(id -u):$(id -g) $HOME/.kube/config</span><br></pre></td></tr></table></figure>
+<p>这样，主节点就初始化完成了</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看集群所有节点</span></span><br><span class="line">kubectl get nodes</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">根据配置文件，给集群创建资源</span></span><br><span class="line">kubectl apply -f xxxx.yaml</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看集群部署了哪些应用？</span></span><br><span class="line">docker ps   ===   kubectl get pods -A</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">运行中的应用在docker里面叫容器，在k8s里面叫Pod</span></span><br><span class="line">kubectl get pods -A</span><br></pre></td></tr></table></figure>
+<h4 id="安装网络组件"><a class="header-anchor" href="#安装网络组件">¶</a>安装网络组件</h4>
+<p>这里选择<code>calico</code>当然也可以选择<code>flannel</code></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">如果你使用的是1.20版本的k8s，可安装v3.21版本的Calico，</span><br><span class="line">curl https://docs.projectcalico.org/archive/v3.21/manifests/calico.yaml -O</span><br><span class="line">kubectl apply -f calico.yaml</span><br></pre></td></tr></table></figure>
+<p>这样就会创建<code>calico</code>的<code>deployment</code>，等待所有的<code>pod</code>都<code>running</code>过后，就让node加入集群</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kubeadm join cluster-endpoint:6443 --token x5g4uy.wpjjdbgra92s25pp \</span><br><span class="line">	--discovery-token-ca-cert-hash sha256:6255797916eaee52bf9dda9429db616fcd828436708345a308f4b917d3457a22</span><br></pre></td></tr></table></figure>
+<p>一系列操作完了过后，就可以在集群节点状态中看到两个节点的<code>Ready</code>了</p>
+<h3 id="部署dashboard"><a class="header-anchor" href="#部署dashboard">¶</a>部署dashboard</h3>
+<blockquote>
+<p>k8s官方提供的可视化界面</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/kubernetes/dashboard">https://github.com/kubernetes/dashboard</a></p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.3.1/aio/deploy/recommended.yaml</span><br></pre></td></tr></table></figure>
+<p>如果下不了就：</p>
+<ol>
+<li><code>vim recommended.yaml</code></li>
+<li><code>kubectl apply -f recommended.yaml</code></li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Copyright 2017 The Kubernetes Authors.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span></span><br><span class="line"><span class="comment"># you may not use this file except in compliance with the License.</span></span><br><span class="line"><span class="comment"># You may obtain a copy of the License at</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#     http://www.apache.org/licenses/LICENSE-2.0</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Unless required by applicable law or agreed to in writing, software</span></span><br><span class="line"><span class="comment"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span></span><br><span class="line"><span class="comment"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span></span><br><span class="line"><span class="comment"># See the License for the specific language governing permissions and</span></span><br><span class="line"><span class="comment"># limitations under the License.</span></span><br><span class="line"></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Namespace</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line"></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ServiceAccount</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">k8s-app:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line"></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">k8s-app:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">port:</span> <span class="number">443</span></span><br><span class="line">      <span class="attr">targetPort:</span> <span class="number">8443</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">k8s-app:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line"></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Secret</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">k8s-app:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">kubernetes-dashboard-certs</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line"><span class="attr">type:</span> <span class="string">Opaque</span></span><br><span class="line"></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Secret</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">k8s-app:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">kubernetes-dashboard-csrf</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line"><span class="attr">type:</span> <span class="string">Opaque</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line">  <span class="attr">csrf:</span> <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Secret</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">k8s-app:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">kubernetes-dashboard-key-holder</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line"><span class="attr">type:</span> <span class="string">Opaque</span></span><br><span class="line"></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ConfigMap</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">k8s-app:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">kubernetes-dashboard-settings</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line"></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Role</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">rbac.authorization.k8s.io/v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">k8s-app:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line"><span class="attr">rules:</span></span><br><span class="line">  <span class="comment"># Allow Dashboard to get, update and delete Dashboard exclusive secrets.</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">apiGroups:</span> [<span class="string">&quot;&quot;</span>]</span><br><span class="line">    <span class="attr">resources:</span> [<span class="string">&quot;secrets&quot;</span>]</span><br><span class="line">    <span class="attr">resourceNames:</span> [<span class="string">&quot;kubernetes-dashboard-key-holder&quot;</span>, <span class="string">&quot;kubernetes-dashboard-certs&quot;</span>, <span class="string">&quot;kubernetes-dashboard-csrf&quot;</span>]</span><br><span class="line">    <span class="attr">verbs:</span> [<span class="string">&quot;get&quot;</span>, <span class="string">&quot;update&quot;</span>, <span class="string">&quot;delete&quot;</span>]</span><br><span class="line">    <span class="comment"># Allow Dashboard to get and update &#x27;kubernetes-dashboard-settings&#x27; config map.</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">apiGroups:</span> [<span class="string">&quot;&quot;</span>]</span><br><span class="line">    <span class="attr">resources:</span> [<span class="string">&quot;configmaps&quot;</span>]</span><br><span class="line">    <span class="attr">resourceNames:</span> [<span class="string">&quot;kubernetes-dashboard-settings&quot;</span>]</span><br><span class="line">    <span class="attr">verbs:</span> [<span class="string">&quot;get&quot;</span>, <span class="string">&quot;update&quot;</span>]</span><br><span class="line">    <span class="comment"># Allow Dashboard to get metrics.</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">apiGroups:</span> [<span class="string">&quot;&quot;</span>]</span><br><span class="line">    <span class="attr">resources:</span> [<span class="string">&quot;services&quot;</span>]</span><br><span class="line">    <span class="attr">resourceNames:</span> [<span class="string">&quot;heapster&quot;</span>, <span class="string">&quot;dashboard-metrics-scraper&quot;</span>]</span><br><span class="line">    <span class="attr">verbs:</span> [<span class="string">&quot;proxy&quot;</span>]</span><br><span class="line">  <span class="bullet">-</span> <span class="attr">apiGroups:</span> [<span class="string">&quot;&quot;</span>]</span><br><span class="line">    <span class="attr">resources:</span> [<span class="string">&quot;services/proxy&quot;</span>]</span><br><span class="line">    <span class="attr">resourceNames:</span> [<span class="string">&quot;heapster&quot;</span>, <span class="string">&quot;http:heapster:&quot;</span>, <span class="string">&quot;https:heapster:&quot;</span>, <span class="string">&quot;dashboard-metrics-scraper&quot;</span>, <span class="string">&quot;http:dashboard-metrics-scraper&quot;</span>]</span><br><span class="line">    <span class="attr">verbs:</span> [<span class="string">&quot;get&quot;</span>]</span><br><span class="line"></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ClusterRole</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">rbac.authorization.k8s.io/v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">k8s-app:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line"><span class="attr">rules:</span></span><br><span class="line">  <span class="comment"># Allow Metrics Scraper to get metrics from the Metrics server</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">apiGroups:</span> [<span class="string">&quot;metrics.k8s.io&quot;</span>]</span><br><span class="line">    <span class="attr">resources:</span> [<span class="string">&quot;pods&quot;</span>, <span class="string">&quot;nodes&quot;</span>]</span><br><span class="line">    <span class="attr">verbs:</span> [<span class="string">&quot;get&quot;</span>, <span class="string">&quot;list&quot;</span>, <span class="string">&quot;watch&quot;</span>]</span><br><span class="line"></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">rbac.authorization.k8s.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">RoleBinding</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">k8s-app:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line"><span class="attr">roleRef:</span></span><br><span class="line">  <span class="attr">apiGroup:</span> <span class="string">rbac.authorization.k8s.io</span></span><br><span class="line">  <span class="attr">kind:</span> <span class="string">Role</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line"><span class="attr">subjects:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">kind:</span> <span class="string">ServiceAccount</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line">    <span class="attr">namespace:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line"></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">rbac.authorization.k8s.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ClusterRoleBinding</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line"><span class="attr">roleRef:</span></span><br><span class="line">  <span class="attr">apiGroup:</span> <span class="string">rbac.authorization.k8s.io</span></span><br><span class="line">  <span class="attr">kind:</span> <span class="string">ClusterRole</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line"><span class="attr">subjects:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">kind:</span> <span class="string">ServiceAccount</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line">    <span class="attr">namespace:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line"></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">k8s-app:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">1</span></span><br><span class="line">  <span class="attr">revisionHistoryLimit:</span> <span class="number">10</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">k8s-app:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">k8s-app:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line">          <span class="attr">image:</span> <span class="string">kubernetesui/dashboard:v2.3.1</span></span><br><span class="line">          <span class="attr">imagePullPolicy:</span> <span class="string">Always</span></span><br><span class="line">          <span class="attr">ports:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">8443</span></span><br><span class="line">              <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">          <span class="attr">args:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">--auto-generate-certificates</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">--namespace=kubernetes-dashboard</span></span><br><span class="line">            <span class="comment"># Uncomment the following line to manually specify Kubernetes API server Host</span></span><br><span class="line">            <span class="comment"># If not specified, Dashboard will attempt to auto discover the API server and connect</span></span><br><span class="line">            <span class="comment"># to it. Uncomment only if the default does not work.</span></span><br><span class="line">            <span class="comment"># - --apiserver-host=http://my-address:port</span></span><br><span class="line">          <span class="attr">volumeMounts:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">kubernetes-dashboard-certs</span></span><br><span class="line">              <span class="attr">mountPath:</span> <span class="string">/certs</span></span><br><span class="line">              <span class="comment"># Create on-disk volume to store exec logs</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">mountPath:</span> <span class="string">/tmp</span></span><br><span class="line">              <span class="attr">name:</span> <span class="string">tmp-volume</span></span><br><span class="line">          <span class="attr">livenessProbe:</span></span><br><span class="line">            <span class="attr">httpGet:</span></span><br><span class="line">              <span class="attr">scheme:</span> <span class="string">HTTPS</span></span><br><span class="line">              <span class="attr">path:</span> <span class="string">/</span></span><br><span class="line">              <span class="attr">port:</span> <span class="number">8443</span></span><br><span class="line">            <span class="attr">initialDelaySeconds:</span> <span class="number">30</span></span><br><span class="line">            <span class="attr">timeoutSeconds:</span> <span class="number">30</span></span><br><span class="line">          <span class="attr">securityContext:</span></span><br><span class="line">            <span class="attr">allowPrivilegeEscalation:</span> <span class="literal">false</span></span><br><span class="line">            <span class="attr">readOnlyRootFilesystem:</span> <span class="literal">true</span></span><br><span class="line">            <span class="attr">runAsUser:</span> <span class="number">1001</span></span><br><span class="line">            <span class="attr">runAsGroup:</span> <span class="number">2001</span></span><br><span class="line">      <span class="attr">volumes:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">kubernetes-dashboard-certs</span></span><br><span class="line">          <span class="attr">secret:</span></span><br><span class="line">            <span class="attr">secretName:</span> <span class="string">kubernetes-dashboard-certs</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">tmp-volume</span></span><br><span class="line">          <span class="attr">emptyDir:</span> &#123;&#125;</span><br><span class="line">      <span class="attr">serviceAccountName:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line">      <span class="attr">nodeSelector:</span></span><br><span class="line">        <span class="attr">&quot;kubernetes.io/os&quot;:</span> <span class="string">linux</span></span><br><span class="line">      <span class="comment"># Comment the following tolerations if Dashboard must not be deployed on master</span></span><br><span class="line">      <span class="attr">tolerations:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">key:</span> <span class="string">node-role.kubernetes.io/master</span></span><br><span class="line">          <span class="attr">effect:</span> <span class="string">NoSchedule</span></span><br><span class="line"></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">k8s-app:</span> <span class="string">dashboard-metrics-scraper</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">dashboard-metrics-scraper</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">port:</span> <span class="number">8000</span></span><br><span class="line">      <span class="attr">targetPort:</span> <span class="number">8000</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">k8s-app:</span> <span class="string">dashboard-metrics-scraper</span></span><br><span class="line"></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">k8s-app:</span> <span class="string">dashboard-metrics-scraper</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">dashboard-metrics-scraper</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">1</span></span><br><span class="line">  <span class="attr">revisionHistoryLimit:</span> <span class="number">10</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">k8s-app:</span> <span class="string">dashboard-metrics-scraper</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">k8s-app:</span> <span class="string">dashboard-metrics-scraper</span></span><br><span class="line">      <span class="attr">annotations:</span></span><br><span class="line">        <span class="attr">seccomp.security.alpha.kubernetes.io/pod:</span> <span class="string">&#x27;runtime/default&#x27;</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">dashboard-metrics-scraper</span></span><br><span class="line">          <span class="attr">image:</span> <span class="string">kubernetesui/metrics-scraper:v1.0.6</span></span><br><span class="line">          <span class="attr">ports:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">8000</span></span><br><span class="line">              <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">          <span class="attr">livenessProbe:</span></span><br><span class="line">            <span class="attr">httpGet:</span></span><br><span class="line">              <span class="attr">scheme:</span> <span class="string">HTTP</span></span><br><span class="line">              <span class="attr">path:</span> <span class="string">/</span></span><br><span class="line">              <span class="attr">port:</span> <span class="number">8000</span></span><br><span class="line">            <span class="attr">initialDelaySeconds:</span> <span class="number">30</span></span><br><span class="line">            <span class="attr">timeoutSeconds:</span> <span class="number">30</span></span><br><span class="line">          <span class="attr">volumeMounts:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">mountPath:</span> <span class="string">/tmp</span></span><br><span class="line">            <span class="attr">name:</span> <span class="string">tmp-volume</span></span><br><span class="line">          <span class="attr">securityContext:</span></span><br><span class="line">            <span class="attr">allowPrivilegeEscalation:</span> <span class="literal">false</span></span><br><span class="line">            <span class="attr">readOnlyRootFilesystem:</span> <span class="literal">true</span></span><br><span class="line">            <span class="attr">runAsUser:</span> <span class="number">1001</span></span><br><span class="line">            <span class="attr">runAsGroup:</span> <span class="number">2001</span></span><br><span class="line">      <span class="attr">serviceAccountName:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line">      <span class="attr">nodeSelector:</span></span><br><span class="line">        <span class="attr">&quot;kubernetes.io/os&quot;:</span> <span class="string">linux</span></span><br><span class="line">      <span class="comment"># Comment the following tolerations if Dashboard must not be deployed on master</span></span><br><span class="line">      <span class="attr">tolerations:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">key:</span> <span class="string">node-role.kubernetes.io/master</span></span><br><span class="line">          <span class="attr">effect:</span> <span class="string">NoSchedule</span></span><br><span class="line">      <span class="attr">volumes:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">tmp-volume</span></span><br><span class="line">          <span class="attr">emptyDir:</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>启动pod过后，就可以设置访问端口：</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kubectl edit svc kubernetes-dashboard -n kubernetes-dashboard</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>type: ClusterIP 改为 type: NodePort</p>
+</blockquote>
+<p><strong>完了过户，执行下面的命令找到端口：</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kubectl get svc -A |grep kubernetes-dashboard</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment"># 找到端口，在安全组放行</span></span></span><br></pre></td></tr></table></figure>
+<p>这样就可以在任何节点通过<code>host+port</code>访问<code>dashboard</code>了</p>
+<p>但是我们还需要一个访问账号</p>
+<p><strong>创建访问账号</strong></p>
+<ol>
+<li><code>vim dash.yaml</code></li>
+<li><code>kubectl apply -f dash.yaml</code></li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment">#创建访问账号，准备一个yaml文件； vi dash.yaml</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ServiceAccount</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">admin-user</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">rbac.authorization.k8s.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ClusterRoleBinding</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">admin-user</span></span><br><span class="line"><span class="attr">roleRef:</span></span><br><span class="line">  <span class="attr">apiGroup:</span> <span class="string">rbac.authorization.k8s.io</span></span><br><span class="line">  <span class="attr">kind:</span> <span class="string">ClusterRole</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">cluster-admin</span></span><br><span class="line"><span class="attr">subjects:</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">kind:</span> <span class="string">ServiceAccount</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">admin-user</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">kubernetes-dashboard</span></span><br></pre></td></tr></table></figure>
+<p><strong>执行下面命令获取访问token</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">获取访问令牌</span></span><br><span class="line">kubectl -n kubernetes-dashboard get secret $(kubectl -n kubernetes-dashboard get sa/admin-user -o jsonpath=&quot;&#123;.secrets[0].name&#125;&quot;) -o go-template=&quot;&#123;&#123;.data.token | base64decode&#125;&#125;&quot;</span><br></pre></td></tr></table></figure>
+<figure class="highlight txt"><table><tr><td class="code"><pre><span class="line">eyJhbGciOiJSUzI1NiIsImtpZCI6InpXSkU0TjhCUmVKQzBJaC03Nk9ES2NMZ1daRTRmQ1FMZU9rRUJ3VXRnM3MifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJhZG1pbi11c2VyLXRva2VuLXgyczhmIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImFkbWluLXVzZXIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiIzOTZmYjdlNS0wMjA2LTQxMjctOGQzYS0xMzRlODVmYjU0MDAiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6a3ViZXJuZXRlcy1kYXNoYm9hcmQ6YWRtaW4tdXNlciJ9.Hf5mhl35_R0iBfBW7fF198h_klEnN6pRKfk_roAzOtAN-Aq21E4804PUhe9Rr9e_uFzLfoFDXacjJrHCuhiML8lpHIfJLK_vSD2pZNaYc2NWZq2Mso-BMGpObxGA23hW0nLQ5gCxlnxIAcyE76aYTAB6U8PxpvtVdgUknBVrwXG8UC_D8kHm9PTwa9jgbZfSYAfhOHWmZxNYo7CF2sHH-AT_WmIE8xLmB7J11vDzaunv92xoUoI0ju7OBA2WRr61bOmSd8WJgLCDcyBblxz4Wa-3zghfKlp0Rgb8l56AAI7ML_snF59X6JqaCuAcCJjIu0FUTS5DuyIObEeXY-z-Rw</span><br></pre></td></tr></table></figure>
+<p><strong>进入</strong><code>dashboard</code></p>
+<img src="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20221119123545481.png" alt="image-20221119123545481" style="zoom:150%;" />
+<h1>⭐完成~⭐</h1>
+
+        
+  </div>
+</article>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2021-2023
+    YxYL
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/category/">分类</a></li><!--
+     --><!--
+       --><li><a href="/tags/">tags</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/YxYL6125">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

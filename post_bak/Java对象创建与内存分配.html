@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="¶对象的创建 对象创建的主要流程：  ¶类加载检查 虚拟机遇到一条new指令时，首先将去检查这个指令的参数是否能在常量池中定位到一个类的符号应用，并且检查这个符号引用代表的类是够已被加载、解析和初始化过。如果没有，那必须先执行相关的类加载过程 new指令对应到语言层面上讲是：new关键词、对象克隆、对象序列化等 ¶分配内存 在类加载检查通过后，接下来虚拟机将为新生对象分配内存。对象所需内存的大小在">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Java对象创建与内存分配">
+<meta property="og:url" content="https://www.yxyl6125.eu.org/post_bak/Java%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D.html">
+<meta property="og:site_name" content="YxYL🥝">
+<meta property="og:description" content="¶对象的创建 对象创建的主要流程：  ¶类加载检查 虚拟机遇到一条new指令时，首先将去检查这个指令的参数是否能在常量池中定位到一个类的符号应用，并且检查这个符号引用代表的类是够已被加载、解析和初始化过。如果没有，那必须先执行相关的类加载过程 new指令对应到语言层面上讲是：new关键词、对象克隆、对象序列化等 ¶分配内存 在类加载检查通过后，接下来虚拟机将为新生对象分配内存。对象所需内存的大小在">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20230102132909352.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20230102135752546.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20230102184958117.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20230102202553745.png">
+<meta property="article:published_time" content="2023-01-02T02:03:45.000Z">
+<meta property="article:modified_time" content="2023-01-02T02:03:45.000Z">
+<meta property="article:author" content="YxYL">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="内存">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20230102132909352.png">
+    
+    
+      
+        
+          
+            <link rel="shortcut icon" href="https://www.gravatar.com/avatar/1c0ccb80f18de6871d3fd37b97cd3594?s=48">
+          
+        
+      
+      
+        
+          
+            <link rel="icon" type="image/png" href="https://www.gravatar.com/avatar/1c0ccb80f18de6871d3fd37b97cd3594?s=192" sizes="192x192">
+          
+        
+      
+      
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="https://www.gravatar.com/avatar/1c0ccb80f18de6871d3fd37b97cd3594?s=180">
+          
+        
+      
+    
+    <!-- title -->
+    <title>Java对象创建与内存分配</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+    <script async defer
+            data-website-id="e77e68be-f6e4-4br3-9365-2b76b57cd571"
+            src="https://analytics.domain.com/umami.js">
+    </script>
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/Butterfly-double-row-display@1.00/cardlistpost.min.css"/>
+<style>#recent-posts > .recent-post-item >.recent-post-info > .article-meta-wrap > .tags:before {content:"\A";
+  white-space: pre;}#recent-posts > .recent-post-item >.recent-post-info > .article-meta-wrap > .tags > .article-meta__separator{display:none}</style>
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+    <div class="content index py4 ">
+        
+          <header id="header">
+  <a class="u-url u-uid" href="/">
+  
+    
+      <img id="logo" alt class="u-logo" src="/images/logo.png" />
+    
+  
+    <div id="title">
+      <h1 class="p-name">YxYL🥝</h1>
+    </div>
+  </a>
+  <div id="nav">
+    <ul>
+      <li class="icon">
+        <a href="#" aria-label="目录"><i class="fa-solid fa-bars fa-2x"></i></a>
+      </li>
+      <!--
+     --><li><a href="/">首页</a></li><!--
+   --><!--
+     --><li><a href="/about/">关于</a></li><!--
+   --><!--
+     --><li><a href="/archives/">归档</a></li><!--
+   --><!--
+     --><li><a href="/category/">分类</a></li><!--
+   --><!--
+     --><li><a href="/tags/">tags</a></li><!--
+   --><!--
+     --><li><a target="_blank" rel="noopener" href="https://github.com/YxYL6125">项目</a></li><!--
+   -->
+    </ul>
+  </div>
+</header>
+
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  
+
+  <div class="content" itemprop="articleBody">
+      
+          <h2 id="对象的创建"><a class="header-anchor" href="#对象的创建">¶</a>对象的创建</h2>
+<p>对象创建的主要流程：</p>
+<p><img src="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20230102132909352.png" alt="image-20230102132909352"></p>
+<h3 id="类加载检查"><a class="header-anchor" href="#类加载检查">¶</a>类加载检查</h3>
+<p>虚拟机遇到一条<code>new</code>指令时，首先将去检查这个指令的参数是否能在常量池中定位到一个类的符号应用，并且检查这个符号引用代表的类是够已被加载、解析和初始化过。如果没有，那必须先执行相关的类加载过程</p>
+<p>new指令对应到语言层面上讲是：new关键词、对象克隆、对象序列化等</p>
+<h3 id="分配内存"><a class="header-anchor" href="#分配内存">¶</a>分配内存</h3>
+<p>在类加载检查通过后，接下来虚拟机将为新生对象分配内存。对象所需内存的大小在类加载完成后完全可以确定，为对象分配空间的任务等同于吧一块内存从Java堆中划分出来。</p>
+<p>这个步骤有两个问题：</p>
+<ol>
+<li>如何划分内存</li>
+<li>在并发情况下，可能出现正在给A分配内存，指针还没来得及修改，对象B有同时使用了原来的指针来分配内存的情况</li>
+</ol>
+<p><strong>划分内存的方法：</strong></p>
+<ul>
+<li><strong>指针碰撞(Bump the Pointer)</strong>(一般情况下默认)：如果Java堆中的内存是绝对规整的，所有用过的内存都放在一边，空闲的内存放在另一边，中间放着一个指针作为分界点的指示器，那所分配的内存就仅仅是吧那个指针向空闲那边挪动一段与对象大小相等的距离</li>
+<li><strong>空闲列表(Free List)</strong>：如果Java堆中的内存并不是规整的，已使用的内存和空闲的内存相互交错，那么就没有办法简单的进行指针碰撞了，虚拟机就必须维护一个列表，记录哪些内存块是可用的，在分配内存的时候从列表中找到一块足够大的空间划分给对象实例，并更新列表上的记录</li>
+</ul>
+<p><strong>解决并发问题的方法：</strong></p>
+<ul>
+<li><strong>CAS</strong>：虚拟机采用CAS配上失败重试的方法保证更新操作的原子性来对分配内存空间的动作进行同步处理</li>
+<li><strong>本地线程分配缓冲(Thread Local Allocation Buffer，TLAB)</strong>：吧内存分配的动作按照线程划分在不同的空间之中进行，即每个线程在Java堆中预先分配一小块内存。通过<code>-XX:+/-UserTLAB</code>JVM参数来设定虚拟机是否使用TLAB(JVM默认会关闭)，<code>-XX:TLABSize</code>指定TLAB大小</li>
+</ul>
+<h3 id="初始化"><a class="header-anchor" href="#初始化">¶</a>初始化</h3>
+<p>内存分配完成后，虚拟机需要将分配到的内存空间都初始化为零值(不包括对象头)，如果使用TLAB，这一工作过程也可以提前至TLAB分配时进行。这一步操作保证了对象的实例字段在Java代码中可以不赋初始值就可以直接使用，程序能访问导致这些字段的数据类型所对应的零值</p>
+<h3 id="设置对象头"><a class="header-anchor" href="#设置对象头">¶</a>设置对象头</h3>
+<p>初始化零值后，虚拟机要对对象进行必要的设置，例如这个对象是哪个类型的实例、如何才能找到类的元数据信息、对象的哈希吗、对象的GC分代年龄等信息。这些信息存放在对象的对象头<strong>Object Header</strong>中</p>
+<p>丢图：</p>
+<p><img src="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20230102135752546.png" alt="image-20230102135752546"></p>
+<h3 id="执行-init-方法"><a class="header-anchor" href="#执行-init-方法">¶</a>执行<code>&lt;init&gt;</code>方法</h3>
+<p>执行<init>方法，即对象按照开发者的意愿进行初始化。对应到语言层面讲，就是为属性赋值(注意，这与上面的赋零值不同，这个是真正意义上的赋值)，和执行构造方法</p>
+<h4 id="对象大小与指针压缩"><a class="header-anchor" href="#对象大小与指针压缩">¶</a>对象大小与指针压缩</h4>
+<blockquote>
+<p>jdk1.6 update14开始，在64位机器中，JVM开始支持指针压缩</p>
+<p>jvm配置参数：UserCompressedOops，compressed——压缩、oop(ordinary object pointer)——对象指针</p>
+<p>启用指针压缩：<code>-XX:+UseCompressedOops</code>(默认开启)，禁止指针压缩：<code>-XX-UseCompressedOops</code></p>
+</blockquote>
+<p>为什么要进行指针压缩：</p>
+<ol>
+<li>在64位平台的HotSpot中使用32位指针，内存使用会多出1.5倍左右，使用较大指针在主内存和缓存之间移动数据，<strong>占用较大宽带，同时GC压力也会加大</strong></li>
+<li>为了减少64位平台下内存的小号，启动指针压缩功能</li>
+<li>在jvm中，32地址最大支持4G内存(2的32次方)，可以对对线的指针的压缩编码、解码的方式进行优化，使得Jvm只用32位地址就可以支持更大的内存配置(小于等于32G)</li>
+<li>堆内存小于4G时，不需要启动指针压缩，jvm会直接去除高32位地址，即使用低虚拟地址空间</li>
+<li>堆内存大于32G时，压缩指针会失效，会强制使用64位(即8字节)来对Java对象来寻址，这里就会出现1问题，所以堆内存不要大于32G为好</li>
+</ol>
+<h2 id="对象内存分配"><a class="header-anchor" href="#对象内存分配">¶</a>对象内存分配</h2>
+<p>对象内存分配流程图：</p>
+<p><img src="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20230102184958117.png" alt="image-20230102184958117"></p>
+<h3 id="对象栈上分配"><a class="header-anchor" href="#对象栈上分配">¶</a>对象栈上分配</h3>
+<p>我们通过通过JVM内存分配可以知道Java中的对象都是在堆上进行分配，当对象没有被引用的时候，需要依靠GC进行回收聂村，如果对象数量较多的时候，会给GC带来较大的压力，也间接影响了应用的性能。</p>
+<p>为了减少临时对象在对内分配的数量，JVM通过<strong>逃逸分析</strong>确定改对象不会被外部访问。如果不会逃逸，可以将改对象在栈上分配内存，这样改对象所占有的内存空间就可以随栈帧出栈而销毁，就减轻了垃圾回收的压力</p>
+<ul>
+<li>逃逸分析：就是分析对象动态作用域，当一个对象在方法中被定义过后，他可能被外部方法所引用。例如作为调用参数传递到其他地方中。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> User <span class="title function_">test1</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">    user.setId(<span class="number">1</span>);</span><br><span class="line">    user.setName(<span class="string">&quot;zhuge&quot;</span>);</span><br><span class="line">    <span class="comment">//TODO 保存到数据库</span></span><br><span class="line">    <span class="keyword">return</span> user;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">test2</span><span class="params">()</span> &#123;</span><br><span class="line">     <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">     user.setId(<span class="number">1</span>);</span><br><span class="line">     user.setName(<span class="string">&quot;zhuge&quot;</span>);</span><br><span class="line">     <span class="comment">//TODO 保存到数据库</span></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>显然，<code>test1</code>方法中的user对象被返回了，这个对象的作用于范围不确定；<code>test2</code>方法中的user对象我们可以确定当方法结束这个对象就可以认为是无效对象了，对于这样的对象我们其实可以将其分配在栈内存中，让其在方法结束时跟随栈内存一起被回收掉</p>
+<p>Jvm对于这种情况可以通过开启逃逸分析参数(<code>-XX:+DoEscapeAnalysis</code>)来优化对象内存分配位置，使其通过<strong>标量替换</strong>优先分配在栈上(栈上分配)，JDK7之后默认开启逃逸分析，如果关闭这个，使用参数(<code>-XX:-DoEscapeAnalysis</code>)</p>
+<ul>
+<li>标量替换：通过逃逸分析确定该对象不会被外部访问，并且对象可以被进一步分解时，<strong>JVM不会创建该对象</strong>，而是将该对象成员变量分解若干个被这个方法使用的成员变量替代，这些代替的成员变量在栈帧或寄存器上分配空间，这样就不会因为没有一大块连续空间导致对象内存不够分配。开启标量替换参数(<code>-XX:+EliminateAllocations</code>)，JDK7之后默认开启</li>
+<li>标量与聚合量：标量就是不可被进一步凤分解的量，而Java的基本数据类型就是标量，标量的队里就是可以被进一步分解量，而这种量称之为<strong>聚合量</strong>。而在Java中对象就是可以被进一步分解的聚合量。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 栈上分配，标量替换</span></span><br><span class="line"><span class="comment">* 代码调用了1亿次alloc()，如果是分配到堆上，大概需要1GB以上堆空间，如果堆空间小于该值，必然会触发GC。</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* 使用如下参数不会发生GC</span></span><br><span class="line"><span class="comment">* ‐Xmx15m ‐Xms15m ‐XX:+DoEscapeAnalysis ‐XX:+PrintGC ‐XX:+EliminateAllocations</span></span><br><span class="line"><span class="comment">* 使用如下参数都会发生大量GC</span></span><br><span class="line"><span class="comment">* ‐Xmx15m ‐Xms15m ‐XX:‐DoEscapeAnalysis ‐XX:+PrintGC ‐XX:+EliminateAllocations</span></span><br><span class="line"><span class="comment">* ‐Xmx15m ‐Xms15m ‐XX:+DoEscapeAnalysis ‐XX:+PrintGC ‐XX:‐EliminateAllocations</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AllotOnStack</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">         <span class="type">long</span> <span class="variable">start</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line">         <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">100000000</span>; i++) &#123;</span><br><span class="line">	         alloc();</span><br><span class="line">         &#125;</span><br><span class="line">         <span class="type">long</span> <span class="variable">end</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line">         System.out.println(end ‐ start);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">alloc</span><span class="params">()</span> &#123;</span><br><span class="line">         <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">         user.setId(<span class="number">1</span>);</span><br><span class="line">         user.setName(<span class="string">&quot;zhuge&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>结论：栈上分配依赖于逃逸分析和标量替换</p>
+</blockquote>
+<h3 id="对象Eden区分配"><a class="header-anchor" href="#对象Eden区分配">¶</a>对象Eden区分配</h3>
+<p>大多数情况，对象在新生代中Eden区分配。在Eden区没有足够空间进行分配时，虚拟机将发起一次<strong>Minor GC</strong></p>
+<p><strong>Minor GC</strong>和<strong>Full GC</strong>的区别：</p>
+<ul>
+<li>Minor GC/Young GC：值发生在新生代的垃圾收集动作，Minor GC 非诚频繁，回收速度一般也比较快</li>
+<li>Major GC/Full GC：一般会回收老年代，。年轻代，方法区的垃圾，速度一般比Minor GC 慢 10倍以上</li>
+</ul>
+<h3 id="大对象直接进入老年代"><a class="header-anchor" href="#大对象直接进入老年代">¶</a>大对象直接进入老年代</h3>
+<p>大对象就是需要的大量连续内存空间的对象(比如：字符串、数组)。JVM参数：<code>-XX:PretenureSizeThreshold</code>可以设置哒大象的大小，如果对象超过设置大小，对象被创建出来的时候，会直接进入老年代，不会进入年轻代</p>
+<blockquote>
+<p>这个参数只在Serial 和 ParNew两个收集器下有效</p>
+</blockquote>
+<p>这样做是为了避免为大对象分配内存的时候的复制操作而降低效率</p>
+<h3 id="对象动态年龄判断"><a class="header-anchor" href="#对象动态年龄判断">¶</a>对象动态年龄判断</h3>
+<p>当前放对象的Survivor区域里(其中的一块区域，方对象的那块S区)，一批对象的总大小大于这块S区域内存大小的50%(<code>-XX:TargetSurvivorRatio</code>可以指定比例)，那么此时大于等于这批对象年龄最大值的对象，就可以直接进入老年代了。</p>
+<blockquote>
+<p>例如：</p>
+<p>S区域里面现在有一批对选哪个，年龄1+年龄2+年龄n的多个年龄对象总和超过了S区域的50%，此时就会吧年龄n(含以上)的对选哪个都放入老年代</p>
+</blockquote>
+<p>这个规则其实是希望那些可能是长期存活的对象，尽早进入老年代。</p>
+<h3 id="老年代空间分配担保机制"><a class="header-anchor" href="#老年代空间分配担保机制">¶</a>老年代空间分配担保机制</h3>
+<p>年轻代每次Minor GC之前JVM都会计算下老年代<strong>剩余可用空间</strong></p>
+<ul>
+<li>如果这个可用空间小于年轻代里现有的所有对象大小之和(<strong>包括垃圾对象</strong>)
+<ul>
+<li>就会看一个&quot;<code>-XX:-HandlePromotionFailure</code>&quot;(JDK1.8默认就设置了)的参数是否设置了</li>
+<li>如果有这个参数，就会看看老年代的可用内存大小，是否大于之前每一次Minor GC后进入老年代的对象的<strong>平均大小</strong></li>
+<li>如果上一步结果是小于或者之前说的参数没有设置，那么就会触发一次Full GC，对老年代和年轻代一起回收一次垃圾；</li>
+</ul>
+</li>
+<li>如果回收完还是没有足够空间存放新的对象就会发生**“OOM”**</li>
+<li>当然，如果Minor GC 之后剩余存货的需要挪动到老年代的对象大小还是大于老年代的可用空间，那么也会出发Full GC，Full GC完成之后如果还是没有空间放Minor GC之后的存货对象，则也会发生**“OOM”**</li>
+</ul>
+<p>上图：</p>
+<p><img src="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/image-20230102202553745.png" alt="image-20230102202553745"></p>
+
+        
+  </div>
+</article>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2021-2023
+    YxYL
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/category/">分类</a></li><!--
+     --><!--
+       --><li><a href="/tags/">tags</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/YxYL6125">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

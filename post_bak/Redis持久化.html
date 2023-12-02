@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="为什么需要持久化Redis是个基于内存的数据库，所以服务一旦宕机">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Redis持久化">
+<meta property="og:url" content="https://www.yxyl6125.eu.org/post_bak/Redis%E6%8C%81%E4%B9%85%E5%8C%96.html">
+<meta property="og:site_name" content="YxYL🥝">
+<meta property="og:description" content="为什么需要持久化Redis是个基于内存的数据库，所以服务一旦宕机">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/redis-x-rdb-1.png">
+<meta property="article:published_time" content="2023-01-13T07:23:39.000Z">
+<meta property="article:modified_time" content="2023-01-13T07:23:39.000Z">
+<meta property="article:author" content="YxYL">
+<meta property="article:tag" content="Redis">
+<meta property="article:tag" content="持久化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/redis-x-rdb-1.png">
+    
+    
+      
+        
+          
+            <link rel="shortcut icon" href="https://www.gravatar.com/avatar/1c0ccb80f18de6871d3fd37b97cd3594?s=48">
+          
+        
+      
+      
+        
+          
+            <link rel="icon" type="image/png" href="https://www.gravatar.com/avatar/1c0ccb80f18de6871d3fd37b97cd3594?s=192" sizes="192x192">
+          
+        
+      
+      
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="https://www.gravatar.com/avatar/1c0ccb80f18de6871d3fd37b97cd3594?s=180">
+          
+        
+      
+    
+    <!-- title -->
+    <title>Redis持久化</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+    <script async defer
+            data-website-id="e77e68be-f6e4-4br3-9365-2b76b57cd571"
+            src="https://analytics.domain.com/umami.js">
+    </script>
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/Butterfly-double-row-display@1.00/cardlistpost.min.css"/>
+<style>#recent-posts > .recent-post-item >.recent-post-info > .article-meta-wrap > .tags:before {content:"\A";
+  white-space: pre;}#recent-posts > .recent-post-item >.recent-post-info > .article-meta-wrap > .tags > .article-meta__separator{display:none}</style>
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+    <div class="content index py4 ">
+        
+          <header id="header">
+  <a class="u-url u-uid" href="/">
+  
+    
+      <img id="logo" alt class="u-logo" src="/images/logo.png" />
+    
+  
+    <div id="title">
+      <h1 class="p-name">YxYL🥝</h1>
+    </div>
+  </a>
+  <div id="nav">
+    <ul>
+      <li class="icon">
+        <a href="#" aria-label="目录"><i class="fa-solid fa-bars fa-2x"></i></a>
+      </li>
+      <!--
+     --><li><a href="/">首页</a></li><!--
+   --><!--
+     --><li><a href="/about/">关于</a></li><!--
+   --><!--
+     --><li><a href="/archives/">归档</a></li><!--
+   --><!--
+     --><li><a href="/category/">分类</a></li><!--
+   --><!--
+     --><li><a href="/tags/">tags</a></li><!--
+   --><!--
+     --><li><a target="_blank" rel="noopener" href="https://github.com/YxYL6125">项目</a></li><!--
+   -->
+    </ul>
+  </div>
+</header>
+
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  
+
+  <div class="content" itemprop="articleBody">
+      
+          <blockquote>
+<p>从两个点，了解一下Redis持久化</p>
+</blockquote>
+<ul>
+<li>为什么需要持久化<br>
+Redis是个基于内存的数据库，所以服务一旦宕机，内存中的数据将全部丢失。通常的解决方案是从后端数据库恢复这些数据，但后端数据库有性能瓶颈，如果是大数据量的恢复<br>
+1、会对数据库带巨大的压力<br>
+2、数据库的性能不如Redis，导致程序响应慢</li>
+<li>Redis持久化方式<br>
+目前官方文档上能看到的Redis对持久化存储的支持明确的两种方案：RDB和AOF</li>
+</ul>
+<h2 id="RDB持久化❌"><a class="header-anchor" href="#RDB持久化❌">¶</a>RDB持久化❌</h2>
+<blockquote>
+<p>RDB就是Redis Database的缩写——快照/内存快照，RDB持久化是吧当前线程数据生成快照保存到磁盘上的过程，由于是某一时刻的快照，那么快照中的值要早于或者等于内存中途的值</p>
+</blockquote>
+<h3 id="触发方式"><a class="header-anchor" href="#触发方式">¶</a>触发方式</h3>
+<blockquote>
+<p>触发RDB持久化的方式有两种，分别是<strong>手动触发</strong>和<strong>自动触发</strong></p>
+</blockquote>
+<h4 id="手动触发"><a class="header-anchor" href="#手动触发">¶</a>手动触发</h4>
+<p>手动触发分别对应<code>save</code>和<code>bgsave</code>命令</p>
+<ul>
+<li>
+<p><strong>save</strong>：阻塞当前Redis服务器，直到RDB过程完成为止，对于内存比较大的实例来说会造成 <strong>long timing</strong> 的阻塞，线上环境不建议使用</p>
+<blockquote>
+<p>#save 60 1000 //关闭RDB只需要将所有的sve保存策略注释掉就好了</p>
+</blockquote>
+</li>
+<li>
+<p><strong>bgsave</strong>：Redis进程执行fork操作创建子线程，RDB持久化过程由子进程负责，完成后自动结束。阻塞只发生在fork阶段，一般时间很短<br>
+<img src="https://raw.githubusercontent.com/YxYL6125/imgBad/main/img/redis-x-rdb-1.png" alt="img"></p>
+</li>
+</ul>
+<p><strong>bgsave的写时复制(COW)机制</strong></p>
+<p>bgsave子进程运行后，开始读取主线程的内存数据，并把他们写入RDB文件。此时，如果主线程对这些数据也是读操作，那么，主线程和bgsave子进程相互不影响。但是，如果主线程要修改这一块数据。那么这块数据就会被复制一份，生成该数据的副本。然后，bgsave子进程会把这个副本数据写入RDB文件，而在这个过程中，住线程仍然可以直接修改原来的数据</p>
+<h5 id="对比"><a class="header-anchor" href="#对比">¶</a>对比</h5>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>save</th>
+<th>bgsave</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IO类型</td>
+<td>同步</td>
+<td>异步</td>
+</tr>
+<tr>
+<td>是否阻塞redis其他命令</td>
+<td>是</td>
+<td>否</td>
+</tr>
+<tr>
+<td>负责度</td>
+<td>O(n)</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td>优点</td>
+<td>不会消耗额外内存</td>
+<td>不阻塞客户端命令</td>
+</tr>
+<tr>
+<td>缺点</td>
+<td>阻塞客户端内存</td>
+<td>需要fork子线程消耗内存</td>
+</tr>
+</tbody>
+</table>
+<h4 id="自动触发"><a class="header-anchor" href="#自动触发">¶</a>自动触发</h4>
+<blockquote>
+<p>在以下4中情况时会自动触发</p>
+</blockquote>
+<ul>
+<li>redsi.conf文件中配置<code>save m n</code>，即，在m秒内有n次修改时，自动触发bgsave生成rdb文件；</li>
+<li>主从复制时，从节点要从主节点进行<strong>全量复制</strong>时也会触发bgsave操作，生成当时的快照发送到从节点</li>
+<li>执行<code>debug reload</code>命令重新加载redis时也会触发bgsave操作；</li>
+<li>默认情况下执行<code>shutdown</code>命令。如果没有开启AOF持久化，那么也会触发bgsave操作；</li>
+</ul>
+<h5 id="redis-conf中配置RDB"><a class="header-anchor" href="#redis-conf中配置RDB">¶</a>redis.conf中配置RDB</h5>
+<p>快照周期：内存快照虽然可以通过有技术人员手动执行save或bgsave命令来进行，但是生产环境下多数情况都会设置其周期性执行条件</p>
+<ul>
+<li>
+<p>Redis中默认的周期新设置</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment">#周期性执行条件的设置格式：</span></span><br><span class="line">save &lt;second&gt; &lt;changes&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 默认的设置为：</span></span><br><span class="line">save 900 1</span><br><span class="line">sava 300 10</span><br><span class="line">save 60 10000</span><br><span class="line"></span><br><span class="line"><span class="comment">#关闭RDB快照功能</span></span><br><span class="line">save <span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>其他相关配置</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment">#文件名称</span></span><br><span class="line">dbfilename dump.rdb</span><br><span class="line"><span class="comment">#文件保存路径</span></span><br><span class="line"><span class="built_in">dir</span> /home/work/app/redis/data/</span><br><span class="line"><span class="comment">#如果持久化出错，主进程是够停止写入</span></span><br><span class="line">stop-writes-on-bgsave-error yse</span><br><span class="line"><span class="comment">#是否压缩</span></span><br><span class="line">rdbcompression</span><br><span class="line"><span class="comment">#导入时是否检查</span></span><br><span class="line">rdbchecksum <span class="built_in">yes</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="深入一点点💩"><a class="header-anchor" href="#深入一点点💩">¶</a>深入一点点💩</h3>
+<ul>
+<li><strong>由于生产环境汇总我们为Redis开辟的内存区域都比较大(例如6G)，那么将内存中的数据同步到Disk的过程可能就会持续比较长的时间，而实际情况是这段时间Redis服务一般都会受到数据写操作请求。那么如何保证数据一致性呢</strong></li>
+</ul>
+<p>RDB中的核心思路是COW，来保证在进行快照操作的这段时间，需要压缩写入Disk上的数据在内存中不会发生变化。在正常的快照操作中，一方面Redis主线程会fork一个新的快照进程来专门来做这个事情，这样保证了Redis服务不会停止对客服端包括写请求在内的任何响应。另一方面这段时间发生的数据变化会以副本的方式存放在另一个新的内存区域，待快照操作结束后才会同步到原来的内存区域</p>
+<ul>
+<li><strong>在进行快照操作的这段时间，如果发生服务崩溃怎么办</strong></li>
+</ul>
+<p>在没将数据全部写入Disk之前，这次快照操作都不算成功。如果出现了服务崩溃的情况，将以上一次完成整的RDB文件作为恢复内存数据的参考。也就是说，在快照操作过程中不能影响上一次备份数据。Redis服务会在Disk上创建一个临时文件进行数据操作，待操作成功后才用这个临时文件替换掉上一次的备份</p>
+<h3 id="RDB-的优缺点"><a class="header-anchor" href="#RDB-的优缺点">¶</a>RDB 的优缺点</h3>
+<ul>
+<li>优点
+<ul>
+<li>RDB文件是某个时间节点的快照，默认使用LZF算法进行压缩，压缩后的文件体积远小于内存大小，适用于备份、全量复制等场景</li>
+<li>Redis加载RDB文件恢复数要远远快与AOF</li>
+</ul>
+</li>
+<li>缺点
+<ul>
+<li>RDB方式实时性不够，无法做到Second级别的持久化</li>
+<li>每次调用bgsave都需要fork子进程，属于重量级操作，频繁执行成本较高</li>
+<li>RDB文件是二进制的没有可读性，AOF文件在了解其结构的情况下是可以手动修改或者不补全</li>
+<li>版本兼容RDB文件问题</li>
+</ul>
+</li>
+</ul>
+<h2 id="AOF持久化🆗"><a class="header-anchor" href="#AOF持久化🆗">¶</a>AOF持久化🆗</h2>
+<p>快照功能并不是非常耐久(durable)：如果Redis因为某些原因而造成故障停机，那么服务器将丢失最近写入、且仍未保存到快照中的那些数据。从1.1版本开始，Redis增加了一种完全耐久的持久化方式：AOF持久化，将<strong>修改的</strong>每一条指令记录进文件<code>appendonly.aof</code>中(先写入os cache，每隔一段时间fsync到Disk中)</p>
+<p>比如执行命令：<code>set yxyl 6125</code>，aof文件里会记录如下数据</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">*3</span><br><span class="line"><span class="variable">$3</span></span><br><span class="line"><span class="built_in">set</span></span><br><span class="line"><span class="variable">$4</span></span><br><span class="line">yxyl</span><br><span class="line"><span class="variable">$4</span></span><br><span class="line">6125</span><br></pre></td></tr></table></figure>
+<p>这是一种redp协议格式数据，*号后面的数字代表命令有多少个参数，$后面的数字代表这个参数有几个字符</p>
+<p>注意，如果执行带过期时间的set命令，aof文件里记录的并不是原始命令，而是记录key过期的<strong>时间戳</strong></p>
+<h3 id="redis-conf中配置AOF"><a class="header-anchor" href="#redis-conf中配置AOF">¶</a>redis.conf中配置AOF</h3>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># appendonly参数开启AOF持久化</span></span><br><span class="line">appendonly no</span><br><span class="line"></span><br><span class="line"><span class="comment"># AOF持久化的文件名，默认 appendonly.aof</span></span><br><span class="line">appendfilename <span class="string">&quot;appendonly.aof&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#AOF文件的保存位置，和RDB文件的位置相同</span></span><br><span class="line"><span class="built_in">dir</span> ./</span><br><span class="line"></span><br><span class="line"><span class="comment">#同步策略</span></span><br><span class="line"><span class="comment"># appendsync always</span></span><br><span class="line">appendsync everysec</span><br><span class="line"><span class="comment"># appendsync no</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#aof重写期间是否同步</span></span><br><span class="line">no-appendsync-on-rewrite no</span><br><span class="line"></span><br><span class="line"><span class="comment">#重写触发配置</span></span><br><span class="line">auto-aof-rewrite-percentage 100</span><br><span class="line">auto-aof-rewrite-min-size 64mb</span><br><span class="line"></span><br><span class="line"><span class="comment">#加载aof出错如何处理</span></span><br><span class="line">aof-load-truncated <span class="built_in">yes</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#文件重写策略</span></span><br><span class="line">aod-rewrite-incremental-fsync <span class="built_in">yes</span></span><br></pre></td></tr></table></figure>
+<h3 id="AOF重写"><a class="header-anchor" href="#AOF重写">¶</a>AOF重写</h3>
+<p>AOF文件里面可能有太多没用的指令，所以AFO会定期根据<strong>内存的最新数据</strong>来生成aof文件</p>
+<p>例如，执行了如下几条命令：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">127.0.0.1:6379&gt; incr readcount</span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br><span class="line">127.0.0.1:6379&gt; incr readcount</span><br><span class="line">(<span class="built_in">integer</span>) 2</span><br><span class="line">127.0.0.1:6379&gt; incr readcount</span><br><span class="line">(<span class="built_in">integer</span>) 3</span><br><span class="line">127.0.0.1:6379&gt; incr readcount</span><br><span class="line">(<span class="built_in">integer</span>) 4</span><br><span class="line">127.0.0.1:6379&gt; incr readcount</span><br><span class="line">(<span class="built_in">integer</span>) 5</span><br></pre></td></tr></table></figure>
+<p>重写后的AOF文件里变成</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">*3</span><br><span class="line"><span class="variable">$3</span></span><br><span class="line">SET</span><br><span class="line"><span class="variable">$2</span></span><br><span class="line">readcount</span><br><span class="line"><span class="variable">$1</span></span><br><span class="line">5</span><br></pre></td></tr></table></figure>
+<p>当然AOF还可以手动重写，进入redis-cli执行命令<code>bgrewriteaof</code>重写AOF</p>
+<p>注意，<strong>AOF重写redis会fork出一个子进程去做(与bgsave命令类似)，不会对redis正常命令处理有太多影响</strong></p>
+<h2 id="Redis-4-0-混合持久化🌟"><a class="header-anchor" href="#Redis-4-0-混合持久化🌟">¶</a>Redis 4.0 混合持久化🌟</h2>
+<p>重启Redis时，我们很少使用RDB来恢复内存状态，因为会丢失大量数据。我们通常使用AOF日志重放，但是重放AOF日志性能相对RDB来说要慢很多这样在Redis实例很大的情况下，启动需要花费很长的时间。Redis4.0为了解决这个问题，带来了一个新的持久化选项——混合持久化</p>
+<p>通过如下配置可以开启混合持久化(<strong>必须先开启aof</strong>)</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">aof-use-rdb-preamble <span class="built_in">yes</span></span><br></pre></td></tr></table></figure>
+<p>如果开启了混合持久化，AOF在重写时，不再是单纯将内存数据转化为RESP命令写入AOF文件，而是将<strong>这一刻之前的内存</strong>做RDB快照处理，并且将RDB快照内容和<strong>增量的AOF</strong>修改内存数据的命令存在一起，都写入写你的AOF文件，新的文件一开始不叫appendonly.aof，等到重写完新的AOF文件才会进行改名，覆盖原有的AOF文件，完成新旧两个AOF文件的替换</p>
+<p>于是在Redis重启的时候，可以先加载RDB的内容，然后再重放增量AOF日志就可以完全代替之前的AOF全量文件重放，因此重启效率大幅得到提升</p>
+
+        
+  </div>
+</article>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2021-2023
+    YxYL
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/category/">分类</a></li><!--
+     --><!--
+       --><li><a href="/tags/">tags</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/YxYL6125">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
